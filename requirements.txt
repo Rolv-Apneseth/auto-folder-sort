@@ -1,2 +1,5 @@
+DateTime==4.3
 pathtools==0.1.2
+pytz==2020.1
 watchdog==0.10.3
+zope.interface==5.1.2
