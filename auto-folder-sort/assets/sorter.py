@@ -2,6 +2,8 @@ import os
 import shutil
 from datetime import datetime
 
+import constants
+
 
 class Sorter:
     """Generates sorter objects which can sort all files in a given folder."""
@@ -16,7 +18,6 @@ class Sorter:
 
         earliest_year: Earliest year to create folders for if 'date' was given for sort_type
 
-        Examples:
         Examples:
         >>> sorter = Sorter(os.path.dirname(__file__), 'file_type', 2019)
         >>> os.path.isdir(sorter.folder)
@@ -82,6 +83,12 @@ class Sorter:
         )
 
         return is_valid_folder and is_valid_sort and is_valid_earliest
+
+    def check_file_folders(self):
+        pass
+
+    def check_date_folders(self):
+        pass
 
     def generate_file_folders(self):
         pass
