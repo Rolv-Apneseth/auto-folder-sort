@@ -22,6 +22,8 @@ class Sorter:
         >>> sorter = Sorter(os.path.dirname(__file__), 'file_type', 2019)
         >>> os.path.isdir(sorter.folder)
         True
+        >>> os.path.isabs(sorter.folder)
+        True
         >>> sorter.sort_type in ['file_type', 'date']
         True
         >>> 1920 <= sorter.earliest_year <= datetime.today().year
@@ -84,11 +86,36 @@ class Sorter:
 
         return is_valid_folder and is_valid_sort and is_valid_earliest
 
-    def check_file_folders(self):
-        pass
+    def check_file_folders(self) -> None:
+        """Ensures sorting folders for file types are present in self.folder."""
 
-    def check_date_folders(self):
-        pass
+        dir_files: list = os.listdir(self.folder)
+
+        for file_type in constants.FILE_FOLDERS:
+            if file_type not in dir_files:
+                os.makedir(os.path.join(self.folder, file_type))
+
+    def check_date_folders(self) -> None:
+        """Ensures sorting folders for dates are present in self.folder.
+
+        Folders will be structured in the layout: year -> month1, month2...
+
+        A year folder will be generated for each year between
+        self.earliest_year and the current year, inclusive.
+        """
+
+        dir_files: list = os.listdir(self.folder)
+
+        years: list = map(
+            str, list(range(self.earliest_year, datetime.today().year + 1))
+        )
+
+        for year in years:
+            if year not in dir_files:
+                os.makedir(os.path.join(self.folder, year))
+
+                for month in constants.MONTHS:
+                    os.makedir(os.path.join(self.folder, year, month))
 
     def generate_file_folders(self):
         pass
