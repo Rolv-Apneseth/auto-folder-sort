@@ -168,7 +168,11 @@ class Sorter:
                 os.makedir(os.path.join(self.folder, year))
 
                 for month in constants.MONTHS:
-                    os.makedir(os.path.join(self.folder, year, month))
+                    os.makedir(
+                        os.path.join(
+                            self.folder, year, f"{constants.MONTHS[month]} {month}"
+                        )
+                    )
 
     def sort_file(self):
         """Sorts self.folder by file type."""
@@ -177,7 +181,7 @@ class Sorter:
 
         try:
             for item in self.dir_files:
-                # Don't resort the generated sort folders
+                # Don't sort the generated sort folders
                 if item in constants.FILE_FOLDERS:
                     continue
 
@@ -203,7 +207,50 @@ class Sorter:
     def sort_date(self):
         """Sorts self.folder by date of last modification."""
 
-        pass
+        self.update_dir_files()
+
+        try:
+            for item in self.dir_files:
+                # Don't sort the generated sort folders
+                if item in self.years:
+                    continue
+
+                old_path = os.path.join(self.folder, item)
+
+                # Time since modification to file/folder in seconds are
+                # converted to local time when file was modified
+                mod_seconds = os.path.getmtime(old_path)
+                mod_local_time = time.ctime(mod_seconds)
+
+                mod_month = mod_local_time[1]
+                mod_year = mod_local_time[4]
+
+                if int(mod_year) < self.earliest_year:
+                    print(
+                        f"\n{item} was last modified {mod_local_time}"
+                        "\nThis is earlier than the earliest given year of "
+                        f"{self.earliest}, so the file was skipped while sorting."
+                    )
+                    continue
+
+                new_path = os.path.join(
+                    self.folder,
+                    mod_year,
+                    f"{constants.MONTHS[mod_month]} {mod_month}",
+                    item,
+                )
+
+                shutil.move(old_path, new_path)
+
+        except IOError as e:
+            print(
+                "\nThere was an error while sorting files by file type"
+                f"\n{e.args}"
+                "\nPlease check the log file for further information"
+            )
+            return False
+
+        return True
 
     def sort(self):
         """Calls appropriate sort function (file or date) based on self.sort_type"""
