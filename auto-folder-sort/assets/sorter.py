@@ -179,92 +179,78 @@ class Sorter:
 
         self.update_dir_files()
 
-        try:
-            for item in self.dir_files:
-                # Don't sort the generated sort folders
-                if item in constants.FILE_FOLDERS:
-                    continue
+        for item in self.dir_files:
+            # Don't sort the generated sort folders
+            if item in constants.FILE_FOLDERS:
+                continue
 
-                extension = os.path.splitext(item)[-1]
+            extension = os.path.splitext(item)[-1]
 
-                for file_type, extensions in constants.FILE_FOLDERS.items():
-                    if extension in extensions:
-                        old_path = os.path.join(self.folder, item)
-                        new_path = os.path.join(self.folder, file_type, item)
+            for file_type, extensions in constants.FILE_FOLDERS.items():
+                if extension in extensions:
+                    old_path = os.path.join(self.folder, item)
+                    new_path = os.path.join(self.folder, file_type, item)
 
-                        shutil.move(old_path, new_path)
-
-        except IOError as e:
-            print(
-                "\nThere was an error while sorting files by file type"
-                f"\n{e.args}"
-                "\nPlease check the log file for further information"
-            )
-            return False
-
-        return True
+                    shutil.move(old_path, new_path)
 
     def sort_date(self):
         """Sorts self.folder by date of last modification."""
 
         self.update_dir_files()
 
-        try:
-            for item in self.dir_files:
-                # Don't sort the generated sort folders
-                if item in self.years:
-                    continue
+        for item in self.dir_files:
+            # Don't sort the generated sort folders
+            if item in self.years:
+                continue
 
-                old_path = os.path.join(self.folder, item)
+            old_path = os.path.join(self.folder, item)
 
-                # Time since modification to file/folder in seconds are
-                # converted to local time when file was modified
-                mod_seconds = os.path.getmtime(old_path)
-                mod_local_time = time.ctime(mod_seconds)
+            # Time since modification to file/folder in seconds are
+            # converted to local time when file was modified
+            mod_seconds = os.path.getmtime(old_path)
+            mod_local_time = time.ctime(mod_seconds)
 
-                mod_month = mod_local_time[1]
-                mod_year = mod_local_time[4]
+            mod_month = mod_local_time[1]
+            mod_year = mod_local_time[4]
 
-                if int(mod_year) < self.earliest_year:
-                    print(
-                        f"\n{item} was last modified {mod_local_time}"
-                        "\nThis is earlier than the earliest given year of "
-                        f"{self.earliest}, so the file was skipped while sorting."
-                    )
-                    continue
-
-                new_path = os.path.join(
-                    self.folder,
-                    mod_year,
-                    f"{constants.MONTHS[mod_month]} {mod_month}",
-                    item,
+            if int(mod_year) < self.earliest_year:
+                print(
+                    f"\n{item} was last modified {mod_local_time}"
+                    "\nThis is earlier than the earliest given year of "
+                    f"{self.earliest}, so the file was skipped while sorting."
                 )
+                continue
 
-                shutil.move(old_path, new_path)
-
-        except IOError as e:
-            print(
-                "\nThere was an error while sorting files by file type"
-                f"\n{e.args}"
-                "\nPlease check the log file for further information"
+            new_path = os.path.join(
+                self.folder,
+                mod_year,
+                f"{constants.MONTHS[mod_month]} {mod_month}",
+                item,
             )
-            return False
 
-        return True
+            shutil.move(old_path, new_path)
 
     def sort(self):
         """Calls appropriate sort function (file or date) based on self.sort_type"""
 
-        if self.assert_valid():
-            self.s_dict[self.sort_type][0]()
-            self.s_dict[self.sort_type][1]()
-        else:
-            raise IOError(
-                "\nOne of the following values given was invalid (False):"
-                f"\nFolder: {self.is_valid_folder}"
-                f"\nSort type: {self.is_valid_sort}"
-                f"\nEarliest year: {self.is_valid_earliest}"
+        try:
+            if self.assert_valid():
+                # Executes respective ensure function then
+                # respective sort function
+                self.s_dict[self.sort_type][0]()
+                self.s_dict[self.sort_type][1]()
+            else:
+                raise IOError(
+                    "\nOne of the following values given was invalid (False):"
+                    f"\nFolder valid: {self.is_valid_folder}"
+                    f"\nSort type valid: {self.is_valid_sort}"
+                    f"\nEarliest year valid: {self.is_valid_earliest}"
+                )
+        except IOError as e:
+            print(
+                f"\nThere was an error while sorting files by {self.sort_type}:"
+                f"\n{e.args}"
                 "\nPlease check the log file for further information"
             )
-
+            return False
         return True
