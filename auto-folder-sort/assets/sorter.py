@@ -203,32 +203,7 @@ class Sorter:
     def sort_date(self):
         """Sorts self.folder by date of last modification."""
 
-        self.update_dir_files()
-
-        try:
-            for item in self.dir_files:
-                # Don't resort the generated sort folders
-                if item in self.years:
-                    continue
-
-                extension = os.path.splitext(item)[-1]
-
-                for year in self.years:
-                    if extension in extensions:
-                        old_path = os.path.join(self.folder, item)
-                        new_path = os.path.join(self.folder, file_type, item)
-
-                        shutil.move(old_path, new_path)
-
-        except IOError as e:
-            print(
-                "\nThere was an error while sorting files by file type"
-                f"\n{e.args}"
-                "\nPlease check the log file for further information"
-            )
-            return False
-
-        return True
+        pass
 
     def sort(self):
         """Calls appropriate sort function (file or date) based on self.sort_type"""
