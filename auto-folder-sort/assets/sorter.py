@@ -110,6 +110,38 @@ class Sorter:
 
         self.dir_files: list = os.listdir(self.folder)
 
+    def update_years(self) -> None:
+        """Update the list of years that folders are to be generated for.
+
+        Examples:
+        >>> sorter = Sorter(os.path.dirname(__file__), 'date', 2018)
+        >>> sorter.update_years()
+        >>> type(sorter.years)
+        <class 'list'>
+        >>> years1 = list(map(str, list(range(2018, datetime.today().year + 1))))
+        >>> sorter.years == years1
+        True
+        >>> sorter.earliest_year = 2017
+        >>> sorter.update_years()
+        >>> sorter.years == years1
+        False
+
+        >>> sorter = Sorter(os.path.dirname(__file__), 'date', 1969)
+        >>> sorter.update_years()
+        >>> type(sorter.years[0])
+        <class 'str'>
+        >>> years2 = list(range(1969, datetime.today().year + 1))
+        >>> sorter.years == years2
+        False
+        >>> years3 = list(map(str, years2))
+        >>> sorter.years == years3
+        True
+        """
+
+        self.years: list = list(
+            map(str, list(range(self.earliest_year, datetime.today().year + 1)))
+        )
+
     def ensure_file_folders(self) -> None:
         """Ensures sorting folders for file types are present in self.folder."""
 
@@ -129,12 +161,9 @@ class Sorter:
         """
 
         self.update_dir_files()
+        self.update_years
 
-        years: list = map(
-            str, list(range(self.earliest_year, datetime.today().year + 1))
-        )
-
-        for year in years:
+        for year in self.years:
             if year not in self.dir_files:
                 os.makedir(os.path.join(self.folder, year))
 
@@ -167,11 +196,39 @@ class Sorter:
                 f"\n{e.args}"
                 "\nPlease check the log file for further information"
             )
+            return False
 
         return True
 
     def sort_date(self):
-        pass
+        """Sorts self.folder by date of last modification."""
+
+        self.update_dir_files()
+
+        try:
+            for item in self.dir_files:
+                # Don't resort the generated sort folders
+                if item in self.years:
+                    continue
+
+                extension = os.path.splitext(item)[-1]
+
+                for year in self.years:
+                    if extension in extensions:
+                        old_path = os.path.join(self.folder, item)
+                        new_path = os.path.join(self.folder, file_type, item)
+
+                        shutil.move(old_path, new_path)
+
+        except IOError as e:
+            print(
+                "\nThere was an error while sorting files by file type"
+                f"\n{e.args}"
+                "\nPlease check the log file for further information"
+            )
+            return False
+
+        return True
 
     def sort(self):
         """Calls appropriate sort function (file or date) based on self.sort_type"""
