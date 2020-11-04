@@ -1,5 +1,6 @@
 import os
 import unittest
+import shutil
 from datetime import datetime
 
 import constants
@@ -75,14 +76,33 @@ class TestSorter(unittest.TestCase):
         self.assertEqual(self.sorter2.years[0], str(datetime.today().year))
 
     def test_ensure_file_folders(self):
-        self.sorter2.folder = os.path.join(self.sorter1.folder, "Sample Files")
-        self.sorter2.assert_valid()
+        self.sorter2.folder = os.path.join(self.sorter2.folder, "Sample Files")
+        self.assertTrue(self.sorter2.assert_valid())
         self.sorter2.ensure_file_folders()
         self.sorter2.update_dir_files()
 
         for folder in constants.FILE_FOLDERS:
             self.assertIn(folder, self.sorter2.dir_files)
             os.rmdir(os.path.join(self.sorter2.folder, folder))
+
+    def test_ensure_date_folders(self):
+        self.sorter1.folder = os.path.join(self.sorter1.folder, "Sample Files")
+        self.sorter1.earliest_year = 2001
+        self.assertTrue(self.sorter1.assert_valid())
+        self.sorter1.ensure_date_folders()
+        self.sorter1.update_dir_files()
+
+        temp_years = list(
+            map(str, list(range(2001, datetime.today().year + 1))))
+
+        for year in temp_years:
+            self.assertIn(year, self.sorter1.dir_files)
+            temp_path = os.path.join(self.sorter1.folder, year)
+            temp_dir = os.listdir(temp_path)
+            for month in constants.MONTHS:
+                self.assertIn(f"{constants.MONTHS[month]} {month}", temp_dir)
+
+            shutil.rmtree(temp_path)
 
 
 if __name__ == "__main__":
