@@ -60,30 +60,6 @@ class Sorter:
         """Update the list of years that folders are to be generated for.
 
         If the list does not currently exist, then  it creates it.
-
-        Examples:
-        >>> sorter = Sorter(os.path.dirname(__file__), 'date', 2018)
-        >>> sorter.update_years()
-        >>> type(sorter.years)
-        <class 'list'>
-        >>> years1 = list(map(str, list(range(2018, datetime.today().year + 1))))
-        >>> sorter.years == years1
-        True
-        >>> sorter.earliest_year = 2017
-        >>> sorter.update_years()
-        >>> sorter.years == years1
-        False
-
-        >>> sorter = Sorter(os.path.dirname(__file__), 'date', 1969)
-        >>> sorter.update_years()
-        >>> type(sorter.years[0])
-        <class 'str'>
-        >>> years2 = list(range(1969, datetime.today().year + 1))
-        >>> sorter.years == years2
-        False
-        >>> years3 = list(map(str, years2))
-        >>> sorter.years == years3
-        True
         """
 
         self.years: list = list(
