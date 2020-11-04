@@ -85,7 +85,7 @@ class Sorter:
         """
 
         self.update_dir_files()
-        self.update_years
+        self.update_years()
 
         for year in self.years:
             if year not in self.dir_files:
