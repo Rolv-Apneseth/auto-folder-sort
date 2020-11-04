@@ -52,27 +52,14 @@ class Sorter:
         return self.is_valid_folder and self.is_valid_sort and self.is_valid_earliest
 
     def update_dir_files(self) -> None:
-        """Updates the list of files/folders present in self.folder.
-
-        Examples:
-        >>> sorter = Sorter(os.path.dirname(__file__), 'date', 2018)
-        >>> dir_1 = sorter.dir_files
-        >>> sorter.folder = os.path.dirname(os.path.dirname(__file__))
-        >>> sorter.update_dir_files()
-        >>> dir_1 == sorter.dir_files
-        False
-
-        >>> sorter = Sorter(os.path.dirname(__file__), 'file_type')
-        >>> dir_1 = sorter.dir_files
-        >>> sorter.update_dir_files()
-        >>> dir_1 == sorter.dir_files
-        True
-        """
+        """Updates the list of files/folders present in self.folder."""
 
         self.dir_files: list = os.listdir(self.folder)
 
     def update_years(self) -> None:
         """Update the list of years that folders are to be generated for.
+
+        If the list does not currently exist, then  it creates it.
 
         Examples:
         >>> sorter = Sorter(os.path.dirname(__file__), 'date', 2018)
