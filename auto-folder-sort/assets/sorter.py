@@ -116,6 +116,7 @@ class Sorter:
                     new_path = os.path.join(self.folder, file_type, item)
 
                     shutil.move(old_path, new_path)
+                    break
 
     def sort_date(self):
         """Sorts self.folder by date of last modification."""
