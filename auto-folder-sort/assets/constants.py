@@ -39,7 +39,7 @@ FILE_FOLDERS = {
         "com",
         "wsf",
     ],
-    "Text, Documents & Data": [
+    "Documents & Data": [
         "txt",
         "text",
         "ini",
