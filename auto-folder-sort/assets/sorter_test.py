@@ -2,14 +2,17 @@ import os
 import unittest
 from datetime import datetime
 
+import constants
 from sorter import Sorter
 
 
 class TestSorter(unittest.TestCase):
     def setUp(self):
 
-        self.sorter1 = Sorter(os.path.dirname(os.path.abspath(__file__)), "date", 2018)
-        self.sorter2 = Sorter(os.path.dirname(os.path.abspath(__file__)), "file_type")
+        self.sorter1 = Sorter(os.path.dirname(
+            os.path.abspath(__file__)), "date", 2018)
+        self.sorter2 = Sorter(os.path.dirname(
+            os.path.abspath(__file__)), "file_type")
 
     def test_init(self):
         self.assertEqual(
@@ -24,7 +27,8 @@ class TestSorter(unittest.TestCase):
         self.assertTrue(self.sorter2.assert_valid())
 
         # Sort type
-        sorter_temp = Sorter(os.path.dirname(os.path.abspath(__file__)), "string", 2018)
+        sorter_temp = Sorter(os.path.dirname(
+            os.path.abspath(__file__)), "string", 2018)
         self.assertFalse(sorter_temp.assert_valid())
 
         # Earliest year
@@ -69,6 +73,16 @@ class TestSorter(unittest.TestCase):
         self.assertEqual(len(self.sorter2.years), 1)
         self.assertEqual(type(self.sorter2.years[0]), str)
         self.assertEqual(self.sorter2.years[0], str(datetime.today().year))
+
+    def test_ensure_file_folders(self):
+        self.sorter2.folder = os.path.join(self.sorter1.folder, "Sample Files")
+        self.sorter2.assert_valid()
+        self.sorter2.ensure_file_folders()
+        self.sorter2.update_dir_files()
+
+        for folder in constants.FILE_FOLDERS:
+            self.assertIn(folder, self.sorter2.dir_files)
+            os.rmdir(os.path.join(self.sorter2.folder, folder))
 
 
 if __name__ == "__main__":
