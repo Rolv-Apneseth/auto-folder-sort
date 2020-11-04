@@ -31,10 +31,7 @@ class Sorter:
             "date": [self.ensure_date_folders, self.sort_date],
         }
 
-        # List of all files/folders present in self.folder
-        self.dir_files: list = os.listdir(self.folder)
-
-    def assert_valid(self):
+    def assert_valid(self) -> bool:
         """Returns whether the provided constructor arguments are valid."""
 
         self.today = datetime.today()
@@ -113,7 +110,7 @@ class Sorter:
 
         for file_type in constants.FILE_FOLDERS:
             if file_type not in self.dir_files:
-                os.makedir(os.path.join(self.folder, file_type))
+                os.mkdir(os.path.join(self.folder, file_type))
 
     def ensure_date_folders(self) -> None:
         """Ensures sorting folders for dates are present in self.folder.
@@ -129,10 +126,10 @@ class Sorter:
 
         for year in self.years:
             if year not in self.dir_files:
-                os.makedir(os.path.join(self.folder, year))
+                os.mkdir(os.path.join(self.folder, year))
 
                 for month in constants.MONTHS:
-                    os.makedir(
+                    os.mkdir(
                         os.path.join(
                             self.folder, year, f"{constants.MONTHS[month]} {month}"
                         )
