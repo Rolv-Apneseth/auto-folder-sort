@@ -42,6 +42,7 @@ FILE_FOLDERS = {
     "Text, Documents & Data": [
         "txt",
         "text",
+        "ini",
         "doc",
         "docx",
         "rtf",
