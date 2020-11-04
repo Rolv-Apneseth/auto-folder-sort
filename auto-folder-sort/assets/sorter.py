@@ -18,17 +18,6 @@ class Sorter:
 
         earliest_year: Earliest year to create folders for if 'date'
                        was given for sort_type
-
-        Examples:
-        >>> sorter = Sorter(os.path.dirname(__file__), 'file_type', 2019)
-        >>> os.path.isdir(sorter.folder)
-        True
-        >>> os.path.isabs(sorter.folder)
-        True
-        >>> sorter.sort_type in ['file_type', 'date']
-        True
-        >>> 1920 <= sorter.earliest_year <= datetime.today().year
-        True
         """
 
         self.folder = folder
@@ -46,33 +35,8 @@ class Sorter:
         self.dir_files: list = os.listdir(self.folder)
 
     def assert_valid(self):
-        """Returns whether the provided constructor arguments are valid.
+        """Returns whether the provided constructor arguments are valid."""
 
-        Examples:
-        >>> sorter = Sorter(os.path.dirname(__file__), 'date', 2018)
-        >>> sorter.assert_valid()
-        True
-
-        >>> sorter = Sorter(os.path.dirname(__file__), 'string', 2018)
-        >>> sorter.assert_valid()
-        False
-
-        >>> sorter = Sorter(os.path.dirname(__file__), 'date', 2040)
-        >>> sorter.assert_valid()
-        False
-
-        >>> sorter = Sorter(os.path.dirname(__file__), 'date', 1900)
-        >>> sorter.assert_valid()
-        False
-
-        >>> sorter = Sorter(os.path.dirname(__file__), 'file_type', 1920)
-        >>> sorter.assert_valid()
-        True
-
-        >>> sorter = Sorter("./", 'date')
-        >>> sorter.assert_valid()
-        False
-        """
         self.today = datetime.today()
         self.year = self.today.year
 
