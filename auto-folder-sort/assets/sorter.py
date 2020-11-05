@@ -108,15 +108,26 @@ class Sorter:
             if item in constants.FILE_FOLDERS:
                 continue
 
-            extension = os.path.splitext(item)[-1]
+            old_path = os.path.join(self.folder, item)
 
-            for file_type, extensions in constants.FILE_FOLDERS.items():
-                if extension in extensions:
-                    old_path = os.path.join(self.folder, item)
-                    new_path = os.path.join(self.folder, file_type, item)
+            if os.path.isdir(old_path):
+                new_path = os.path.join(
+                    self.folder, constants.FILE_FOLDERS.keys()[0], item
+                )
 
-                    shutil.move(old_path, new_path)
-                    break
+            else:
+                extension = os.path.splitext(item)[-1]
+
+                for file_type, extensions in constants.FILE_FOLDERS.items():
+                    if extension in extensions:
+                        new_path = os.path.join(self.folder, file_type, item)
+                        break
+                else:
+                    new_path = os.path.join(
+                        self.folder, constants.FILE_FOLDERS.keys()[-1], item
+                    )
+
+            shutil.move(old_path, new_path)
 
     def sort_date(self):
         """Sorts self.folder by date of last modification."""
