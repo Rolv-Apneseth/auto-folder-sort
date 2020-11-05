@@ -104,4 +104,7 @@ FILE_FOLDERS = {
         "wmv",
         "mov",
     ],
+    "Other": [
+
+    ]
 }
