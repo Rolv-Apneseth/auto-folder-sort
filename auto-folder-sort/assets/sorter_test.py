@@ -1,19 +1,42 @@
 import os
-import unittest
 import shutil
+import unittest
 from datetime import datetime
 
 import constants
 from sorter import Sorter
 
+# CONSTANTS
+
+# Used to test that sort_file function placed every sample
+# file in exactly the right folder
+TEST_FILE_FOLDERS = {
+    "Folders & Archives": [
+        "sample_folder",
+        "sample.zip",
+    ],
+    "Executables": [
+        "sample.run",
+        "sample.exe",
+        "sample.bat",
+    ],
+    "Documents & Data": [
+        "sample.txt",
+        "sample.ini",
+    ],
+    "Media": [
+        "sample.mp4",
+        "sample.jpeg",
+    ],
+    "Other": [],
+}
+
 
 class TestSorter(unittest.TestCase):
     def setUp(self):
 
-        self.sorter1 = Sorter(os.path.dirname(
-            os.path.abspath(__file__)), "date", 2018)
-        self.sorter2 = Sorter(os.path.dirname(
-            os.path.abspath(__file__)), "file_type")
+        self.sorter1 = Sorter(os.path.dirname(os.path.abspath(__file__)), "date", 2018)
+        self.sorter2 = Sorter(os.path.dirname(os.path.abspath(__file__)), "file_type")
 
     def test_init(self):
         self.assertEqual(
@@ -28,8 +51,7 @@ class TestSorter(unittest.TestCase):
         self.assertTrue(self.sorter2.assert_valid())
 
         # Sort type
-        sorter_temp = Sorter(os.path.dirname(
-            os.path.abspath(__file__)), "string", 2018)
+        sorter_temp = Sorter(os.path.dirname(os.path.abspath(__file__)), "string", 2018)
         self.assertFalse(sorter_temp.assert_valid())
 
         # Earliest year
@@ -92,8 +114,7 @@ class TestSorter(unittest.TestCase):
         self.sorter1.ensure_date_folders()
         self.sorter1.update_dir_files()
 
-        temp_years = list(
-            map(str, list(range(2001, datetime.today().year + 1))))
+        temp_years = list(map(str, list(range(2001, datetime.today().year + 1))))
 
         for year in temp_years:
             self.assertIn(year, self.sorter1.dir_files)
@@ -103,6 +124,26 @@ class TestSorter(unittest.TestCase):
                 self.assertIn(f"{constants.MONTHS[month]} {month}", temp_dir)
 
             shutil.rmtree(temp_path)
+
+    def test_sort_file(self):
+        self.sorter2.folder = os.path.join(self.sorter2.folder, "Sample Files")
+        self.assertTrue(self.sorter2.assert_valid())
+        self.sorter2.ensure_file_folders()
+        self.sorter2.sort_file()
+        self.sorter2.update_dir_files()
+
+        for file_type in TEST_FILE_FOLDERS:
+            temp_path = os.path.join(self.sorter2.folder, file_type)
+            temp_dir = os.listdir(temp_path)
+
+            for item in temp_dir:
+                shutil.move(
+                    os.path.join(temp_path, item),
+                    os.path.join(self.sorter2.folder, item),
+                )
+            os.rmdir(temp_path)
+
+            self.assertEqual(temp_dir, TEST_FILE_FOLDERS[file_type])
 
 
 if __name__ == "__main__":
