@@ -111,21 +111,17 @@ class Sorter:
             old_path = os.path.join(self.folder, item)
 
             if os.path.isdir(old_path):
-                new_path = os.path.join(
-                    self.folder, constants.FILE_FOLDERS.keys()[0], item
-                )
+                new_path = os.path.join(self.folder, "Folders & Archives", item)
 
             else:
-                extension = os.path.splitext(item)[-1]
+                extension = os.path.splitext(item)[-1][1:]
 
-                for file_type, extensions in constants.FILE_FOLDERS.items():
-                    if extension in extensions:
+                for file_type in constants.FILE_FOLDERS:
+                    if extension in constants.FILE_FOLDERS[file_type]:
                         new_path = os.path.join(self.folder, file_type, item)
                         break
                 else:
-                    new_path = os.path.join(
-                        self.folder, constants.FILE_FOLDERS.keys()[-1], item
-                    )
+                    new_path = os.path.join(self.folder, "Other", item)
 
             shutil.move(old_path, new_path)
 
