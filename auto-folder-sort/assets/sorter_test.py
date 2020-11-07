@@ -31,12 +31,28 @@ TEST_FILE_FOLDERS = {
     "Other": [],
 }
 
+# Used to check folder structure is unchanged before each test
+SAMPLE_FILES = [
+    "sample.run",
+    "sample.mp4",
+    "sample.exe",
+    "sample_folder",
+    "sample.txt",
+    "sample.jpeg",
+    "sample.zip",
+    "sample.ini",
+    "sample.bat",
+]
+
 
 class TestSorter(unittest.TestCase):
     def setUp(self):
 
         self.sorter1 = Sorter(os.path.dirname(os.path.abspath(__file__)), "date", 2018)
         self.sorter2 = Sorter(os.path.dirname(os.path.abspath(__file__)), "file_type")
+
+        # Stops test from running if folder layout is incorrect
+        assert os.listdir(os.path.join(self.sorter1.folder, "Sample Files"))
 
     def test_init(self):
         self.assertEqual(
@@ -125,7 +141,7 @@ class TestSorter(unittest.TestCase):
 
             shutil.rmtree(temp_path)
 
-    def test_sort_file(self):
+    def test_sort_file_normal(self):
         self.sorter2.folder = os.path.join(self.sorter2.folder, "Sample Files")
         self.assertTrue(self.sorter2.assert_valid())
         self.sorter2.ensure_file_folders()
