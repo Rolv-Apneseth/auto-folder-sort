@@ -52,7 +52,10 @@ class TestSorter(unittest.TestCase):
         self.sorter2 = Sorter(os.path.dirname(os.path.abspath(__file__)), "file_type")
 
         # Stops test from running if folder layout is incorrect
-        assert os.listdir(os.path.join(self.sorter1.folder, "Sample Files"))
+        assert (
+            os.listdir(os.path.join(self.sorter1.folder, "Sample Files"))
+            == SAMPLE_FILES
+        )
 
     def test_init(self):
         self.assertEqual(
@@ -141,13 +144,27 @@ class TestSorter(unittest.TestCase):
 
             shutil.rmtree(temp_path)
 
-    def test_sort_file_normal(self):
+    def test_sort_file(self):
         self.sorter2.folder = os.path.join(self.sorter2.folder, "Sample Files")
         self.assertTrue(self.sorter2.assert_valid())
+
+        # NORMAL
         self.sorter2.ensure_file_folders()
         self.sorter2.sort_file()
-        self.sorter2.update_dir_files()
 
+        # DUPLICATE
+        temp_path = os.path.join(self.sorter2.folder, "Executables")
+        temp_dir = os.listdir(temp_path)
+
+        if temp_dir:
+            shutil.copy(
+                os.path.join(temp_path, temp_dir[1]),
+                os.path.join(self.sorter2.folder, temp_dir[1]),
+            )
+
+            self.sorter2.sort_file()
+
+        # UNDO FOLDERS
         for file_type in TEST_FILE_FOLDERS:
             temp_path = os.path.join(self.sorter2.folder, file_type)
             temp_dir = os.listdir(temp_path)
