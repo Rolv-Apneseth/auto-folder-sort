@@ -44,23 +44,19 @@ SAMPLE_FILES = [
     "sample.bat",
 ]
 
+SAMPLE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Sample Files")
+
 
 class TestSorter(unittest.TestCase):
     def setUp(self):
-
-        self.sorter1 = Sorter(os.path.dirname(os.path.abspath(__file__)), "date", 2018)
-        self.sorter2 = Sorter(os.path.dirname(os.path.abspath(__file__)), "file_type")
+        self.sorter1 = Sorter(SAMPLE_PATH, "date", 2018)
+        self.sorter2 = Sorter(SAMPLE_PATH, "file_type")
 
         # Stops test from running if folder layout is incorrect
-        assert (
-            os.listdir(os.path.join(self.sorter1.folder, "Sample Files"))
-            == SAMPLE_FILES
-        )
+        assert os.listdir(SAMPLE_PATH) == SAMPLE_FILES
 
     def test_init(self):
-        self.assertEqual(
-            self.sorter1.folder, os.path.dirname(os.path.abspath(__file__))
-        )
+        self.assertEqual(self.sorter1.folder, SAMPLE_PATH)
         self.assertEqual(self.sorter2.sort_type, "file_type")
         self.assertEqual(self.sorter1.earliest_year, 2018)
         self.assertEqual(self.sorter2.earliest_year, datetime.today().year)
@@ -70,7 +66,7 @@ class TestSorter(unittest.TestCase):
         self.assertTrue(self.sorter2.assert_valid())
 
         # Sort type
-        sorter_temp = Sorter(os.path.dirname(os.path.abspath(__file__)), "string", 2018)
+        sorter_temp = Sorter(SAMPLE_PATH, "string", 2018)
         self.assertFalse(sorter_temp.assert_valid())
 
         # Earliest year
@@ -117,8 +113,6 @@ class TestSorter(unittest.TestCase):
         self.assertEqual(self.sorter2.years[0], str(datetime.today().year))
 
     def test_ensure_file_folders(self):
-        self.sorter2.folder = os.path.join(self.sorter2.folder, "Sample Files")
-        self.assertTrue(self.sorter2.assert_valid())
         self.sorter2.ensure_file_folders()
         self.sorter2.update_dir_files()
 
@@ -127,7 +121,6 @@ class TestSorter(unittest.TestCase):
             os.rmdir(os.path.join(self.sorter2.folder, folder))
 
     def test_ensure_date_folders(self):
-        self.sorter1.folder = os.path.join(self.sorter1.folder, "Sample Files")
         self.sorter1.earliest_year = 2001
         self.assertTrue(self.sorter1.assert_valid())
         self.sorter1.ensure_date_folders()
@@ -145,9 +138,6 @@ class TestSorter(unittest.TestCase):
             shutil.rmtree(temp_path)
 
     def test_sort_file(self):
-        self.sorter2.folder = os.path.join(self.sorter2.folder, "Sample Files")
-        self.assertTrue(self.sorter2.assert_valid())
-
         # NORMAL
         self.sorter2.ensure_file_folders()
         self.sorter2.sort_file()
