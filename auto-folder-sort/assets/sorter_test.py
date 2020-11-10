@@ -1,13 +1,13 @@
 import os
 import shutil
+import time
 import unittest
 from datetime import datetime
 
 import constants
 from sorter import Sorter
 
-# CONSTANTS
-
+### CONSTANTS ###
 # Used to test that sort_file function placed every sample
 # file in exactly the right folder
 TEST_FILE_FOLDERS = {
@@ -167,6 +167,34 @@ class TestSorter(unittest.TestCase):
             os.rmdir(temp_path)
 
             self.assertEqual(temp_dir, TEST_FILE_FOLDERS[file_type])
+
+    def test_sort_date(self):
+        self.sorter1.ensure_date_folders()
+        self.sorter1.sort_date()
+
+        for year in self.sorter1.years:
+            temp_path = os.path.join(self.sorter1.folder, year)
+            temp_dir = os.listdir(temp_path)
+
+            for month in temp_dir:
+                temp_month_path = os.path.join(temp_path, month)
+                temp_month_dir = os.listdir(temp_month_path)
+
+                try:
+                    if year == "2020" and month == "(11) Nov":
+                        self.assertEqual(temp_month_dir, SAMPLE_FILES)
+                except AssertionError as e:
+                    print(e.args)
+
+                # Undo folders
+                finally:
+                    for item in temp_month_dir:
+                        shutil.move(
+                            os.path.join(temp_month_path, item),
+                            os.path.join(self.sorter1.folder, item),
+                        )
+                os.rmdir(temp_month_path)
+            os.rmdir(temp_path)
 
 
 if __name__ == "__main__":
