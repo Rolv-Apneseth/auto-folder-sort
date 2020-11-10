@@ -173,28 +173,26 @@ class TestSorter(unittest.TestCase):
         self.sorter1.sort_date()
 
         for year in self.sorter1.years:
-            temp_path = os.path.join(self.sorter1.folder, year)
-            temp_dir = os.listdir(temp_path)
+            temp_year_path = os.path.join(self.sorter1.folder, year)
+            temp_year_dir = os.listdir(temp_year_path)
 
-            for month in temp_dir:
-                temp_month_path = os.path.join(temp_path, month)
+            for month in temp_year_dir:
+                temp_month_path = os.path.join(temp_year_path, month)
                 temp_month_dir = os.listdir(temp_month_path)
 
-                try:
-                    if year == "2020" and month == "(11) Nov":
-                        self.assertEqual(temp_month_dir, SAMPLE_FILES)
-                except AssertionError as e:
-                    print(e.args)
+                # All sample files created in November 2020
+                if year == "2020" and month == "(11) Nov":
+                    temp_test_dir = temp_month_dir
 
-                # Undo folders
-                finally:
-                    for item in temp_month_dir:
-                        shutil.move(
-                            os.path.join(temp_month_path, item),
-                            os.path.join(self.sorter1.folder, item),
-                        )
+                for item in temp_month_dir:
+                    shutil.move(
+                        os.path.join(temp_month_path, item),
+                        os.path.join(self.sorter1.folder, item),
+                    )
                 os.rmdir(temp_month_path)
-            os.rmdir(temp_path)
+            os.rmdir(temp_year_path)
+
+        self.assertEqual(temp_test_dir, SAMPLE_FILES)
 
 
 if __name__ == "__main__":
