@@ -55,6 +55,23 @@ class TestSorter(unittest.TestCase):
         # Stops test from running if folder layout is incorrect
         assert os.listdir(SAMPLE_PATH) == SAMPLE_FILES
 
+    # HELPER FUNCTIONS
+    def undo_file_sort(self):
+        self.temp_dirs = {}
+        for file_type in TEST_FILE_FOLDERS:
+            self.temp_path = os.path.join(self.sorter2.folder, file_type)
+            self.temp_dir = os.listdir(self.temp_path)
+            self.temp_dirs[file_type] = self.temp_dir
+
+            for item in self.temp_dir:
+                shutil.move(
+                    os.path.join(self.temp_path, item),
+                    os.path.join(self.sorter2.folder, item),
+                )
+            os.rmdir(self.temp_path)
+
+    # TESTS
+
     def test_init(self):
         self.assertEqual(self.sorter1.folder, SAMPLE_PATH)
         self.assertEqual(self.sorter2.sort_type, "file_type")
@@ -138,35 +155,25 @@ class TestSorter(unittest.TestCase):
             shutil.rmtree(temp_path)
 
     def test_sort_file(self):
-        # NORMAL
         self.sorter2.ensure_file_folders()
         self.sorter2.sort_file()
 
-        # DUPLICATE
-        temp_path = os.path.join(self.sorter2.folder, "Executables")
-        temp_dir = os.listdir(temp_path)
+        # Create duplicate file and sort again
+        self.temp_path = os.path.join(self.sorter2.folder, "Executables")
+        self.temp_dir = os.listdir(self.temp_path)
 
-        if temp_dir:
-            shutil.copy(
-                os.path.join(temp_path, temp_dir[1]),
-                os.path.join(self.sorter2.folder, temp_dir[1]),
-            )
+        shutil.copy(
+            os.path.join(self.temp_path, self.temp_dir[1]),
+            os.path.join(self.sorter2.folder, self.temp_dir[1]),
+        )
+        self.sorter2.sort_file()
 
-            self.sorter2.sort_file()
+        # Undo generated folders and assert files were sorted correctly
+        # self.temp_dirs is created/updated in undo_file_sort
+        self.undo_file_sort()
 
-        # UNDO FOLDERS
-        for file_type in TEST_FILE_FOLDERS:
-            temp_path = os.path.join(self.sorter2.folder, file_type)
-            temp_dir = os.listdir(temp_path)
-
-            for item in temp_dir:
-                shutil.move(
-                    os.path.join(temp_path, item),
-                    os.path.join(self.sorter2.folder, item),
-                )
-            os.rmdir(temp_path)
-
-            self.assertEqual(temp_dir, TEST_FILE_FOLDERS[file_type])
+        for file_type in self.temp_dirs:
+            self.assertEqual(self.temp_dirs[file_type], TEST_FILE_FOLDERS[file_type])
 
     def test_sort_date(self):
         self.sorter1.ensure_date_folders()
@@ -193,6 +200,13 @@ class TestSorter(unittest.TestCase):
             os.rmdir(temp_year_path)
 
         self.assertEqual(temp_test_dir, SAMPLE_FILES)
+
+    # def test_sort(self):
+    #     # Date
+    #     self.sorter1.sort()
+
+    #     # File type
+    #     self.sorter2.sort()
 
 
 if __name__ == "__main__":
