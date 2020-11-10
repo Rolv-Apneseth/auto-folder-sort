@@ -142,11 +142,9 @@ class Sorter:
             # converted to local time when file was modified
             mod_seconds = os.path.getmtime(old_path)
             mod_local_time = time.ctime(mod_seconds).split()
-            print(mod_local_time)
 
             mod_month = mod_local_time[1]
             mod_year = mod_local_time[-1]
-            print(mod_year, mod_month)
 
             if int(mod_year) < self.earliest_year:
                 print(
