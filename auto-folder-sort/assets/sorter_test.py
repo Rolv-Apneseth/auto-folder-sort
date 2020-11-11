@@ -135,16 +135,16 @@ class TestSorter(unittest.TestCase):
 
     def test_update_dir_files(self):
         self.sorter1.update_dir_files()
-        dir1 = self.sorter1.dir_files
+        self.dir1 = self.sorter1.dir_files
         self.sorter2.update_dir_files()
-        dir2 = self.sorter2.dir_files
-        self.assertTrue(dir1 == dir2)
+        self.dir2 = self.sorter2.dir_files
+        self.assertTrue(self.dir1 == self.dir2)
 
         self.sorter1.folder = os.path.dirname(self.sorter1.folder)
         self.sorter2.folder = os.path.dirname(self.sorter2.folder)
         self.sorter1.update_dir_files()
         self.sorter2.update_dir_files()
-        self.assertNotEqual(dir1, self.sorter1.dir_files)
+        self.assertNotEqual(self.dir1, self.sorter1.dir_files)
         self.assertEqual(self.sorter1.dir_files, self.sorter2.dir_files)
 
     def test_update_years(self):
@@ -175,16 +175,16 @@ class TestSorter(unittest.TestCase):
         self.sorter1.ensure_date_folders()
         self.sorter1.update_dir_files()
 
-        temp_years = list(map(str, list(range(2001, datetime.today().year + 1))))
+        self.temp_years = list(map(str, list(range(2001, datetime.today().year + 1))))
 
-        for year in temp_years:
+        for year in self.temp_years:
             self.assertIn(year, self.sorter1.dir_files)
-            temp_path = os.path.join(self.sorter1.folder, year)
-            temp_dir = os.listdir(temp_path)
+            self.temp_path = os.path.join(self.sorter1.folder, year)
+            self.temp_dir = os.listdir(self.temp_path)
             for month in constants.MONTHS:
-                self.assertIn(f"{constants.MONTHS[month]} {month}", temp_dir)
+                self.assertIn(f"{constants.MONTHS[month]} {month}", self.temp_dir)
 
-            shutil.rmtree(temp_path)
+            shutil.rmtree(self.temp_path)
 
     def test_sort_file(self):
         self.sorter2.ensure_file_folders()
