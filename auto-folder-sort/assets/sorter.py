@@ -1,9 +1,26 @@
+import logging
 import os
 import shutil
 import time
 from datetime import datetime
 
 import constants
+
+# Log
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.WARNING)
+
+formatter = logging.Formatter(
+    "\n%(levelname)s\nTime: %(asctime)s\nFile: %(filename)s:\n%(message)s"
+)
+log_path = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "logs", "sorter.log"
+)
+
+file_handler = logging.FileHandler(log_path)
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
 
 
 class Sorter:
@@ -31,6 +48,14 @@ class Sorter:
             "file_type": [self.ensure_file_folders, self.sort_file],
             "date": [self.ensure_date_folders, self.sort_date],
         }
+
+        logger.info(
+            f"Created Sorter object for: {self.folder}"
+            f"\nSorting by: {self.sort_type}"
+        )
+        logger.debug(
+            "Other attributes:" f"\nearliest year: {self.earliest_year}",
+        )
 
     def assert_valid(self) -> bool:
         """Returns whether the provided constructor arguments are valid."""

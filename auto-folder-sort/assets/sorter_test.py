@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 import time
@@ -5,7 +6,13 @@ import unittest
 from datetime import datetime
 
 import constants
-from sorter import Sorter
+from sorter import Sorter, file_handler
+
+# Log
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+logger.addHandler(file_handler)
 
 ### CONSTANTS ###
 # Used to test that sort_file function placed every sample
