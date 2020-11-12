@@ -49,6 +49,10 @@ SAMPLE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Sample F
 
 ## Unit Tests ##
 class TestSorter(unittest.TestCase):
+    @classmethod
+    def tearDownClass(cls):
+        assert os.listdir(SAMPLE_PATH) == SAMPLE_FILES
+
     def setUp(self):
         self.sorter1 = Sorter(SAMPLE_PATH, "date", 2018)
         self.sorter2 = Sorter(SAMPLE_PATH, "file_type")
