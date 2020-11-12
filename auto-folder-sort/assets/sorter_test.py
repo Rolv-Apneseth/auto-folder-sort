@@ -68,6 +68,7 @@ class TestSorter(unittest.TestCase):
         self.temp_month_path = None
         self.temp_year_path = None
         self.temp_years = None
+        self.sorter_temp = None
 
         # Stops test from running if folder layout is incorrect
         assert os.listdir(SAMPLE_PATH) == SAMPLE_FILES
@@ -136,23 +137,23 @@ class TestSorter(unittest.TestCase):
         self.assertTrue(self.sorter2.assert_valid())
 
         # Sort type
-        sorter_temp = Sorter(SAMPLE_PATH, "string", 2018)
-        self.assertFalse(sorter_temp.assert_valid())
+        self.sorter_temp = Sorter(SAMPLE_PATH, "string", 2018)
+        self.assertFalse(self.sorter_temp.assert_valid())
 
         # Earliest year
-        sorter_temp.sort_type = "date"
-        sorter_temp.earliest_year = 1900
-        self.assertFalse(sorter_temp.assert_valid())
-        sorter_temp.earliest_year = 2040
-        self.assertFalse(sorter_temp.assert_valid())
-        sorter_temp.earliest_year = "2018"
-        self.assertFalse(sorter_temp.assert_valid())
+        self.sorter_temp.sort_type = "date"
+        self.sorter_temp.earliest_year = 1900
+        self.assertFalse(self.sorter_temp.assert_valid())
+        self.sorter_temp.earliest_year = 2040
+        self.assertFalse(self.sorter_temp.assert_valid())
+        self.sorter_temp.earliest_year = "2018"
+        self.assertFalse(self.sorter_temp.assert_valid())
 
         # Folder
-        sorter_temp = Sorter("./", "date")
-        self.assertFalse(sorter_temp.assert_valid())
-        sorter_temp.folder = "folder"
-        self.assertFalse(sorter_temp.assert_valid())
+        self.sorter_temp = Sorter("./", "date")
+        self.assertFalse(self.sorter_temp.assert_valid())
+        self.sorter_temp.folder = "folder"
+        self.assertFalse(self.sorter_temp.assert_valid())
 
     def test_update_dir_files(self):
         self.sorter1.update_dir_files()
