@@ -200,10 +200,7 @@ class TestSorter(unittest.TestCase):
         )
         self.sorter2.sort_file()
 
-        # Undo generated folders and assert files were sorted correctly
-        # self.temp_dirs is created/updated in undo_file_sort
         self.undo_file_sort()
-
         for file_type in self.temp_dirs:
             self.assertEqual(self.temp_dirs[file_type], TEST_FILE_FOLDERS[file_type])
 
@@ -211,18 +208,22 @@ class TestSorter(unittest.TestCase):
         self.sorter1.ensure_date_folders()
         self.sorter1.sort_date()
 
-        # Undo generated folders and assert files were sorted correctly
-        # self.temp_dirs is created/updated in undo_date_sort
         self.undo_date_sort()
-
         self.assertEqual(self.temp_dir, SAMPLE_FILES)
 
-    # def test_sort(self):
-    #     # Date
-    #     self.sorter1.sort()
+    def test_sort(self):
+        # DATE
+        self.sorter1.sort()
 
-    #     # File type
-    #     self.sorter2.sort()
+        self.undo_date_sort()
+        self.assertEqual(self.temp_dir, SAMPLE_FILES)
+
+        # FILE TYPE
+        self.sorter2.sort()
+
+        self.undo_file_sort()
+        for file_type in self.temp_dirs:
+            self.assertEqual(self.temp_dirs[file_type], TEST_FILE_FOLDERS[file_type])
 
 
 if __name__ == "__main__":
