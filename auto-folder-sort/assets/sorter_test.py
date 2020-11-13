@@ -10,7 +10,7 @@ from sorter import Sorter, file_handler
 
 # Log
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 logger.addHandler(file_handler)
 
