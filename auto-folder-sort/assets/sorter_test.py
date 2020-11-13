@@ -71,8 +71,8 @@ class TestSorter(unittest.TestCase):
         self.sorter2 = Sorter(SAMPLE_PATH, "file_type")
 
         # Variables used in test functions
+        self.temp_dirs = {}
         self.temp_dir = None
-        self.temp_dirs = None
         self.temp_month_dir = None
         self.temp_year_dir = None
         self.temp_path = None
@@ -98,7 +98,6 @@ class TestSorter(unittest.TestCase):
 
         Only for use with test_sort_file and test_sort.
         """
-        self.temp_dirs = {}
         for file_type in TEST_FILE_FOLDERS:
             self.temp_path = os.path.join(self.sorter2.folder, file_type)
             self.temp_dir = os.listdir(self.temp_path)
