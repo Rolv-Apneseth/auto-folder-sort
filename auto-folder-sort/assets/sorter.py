@@ -202,12 +202,13 @@ class Sorter:
         except IOError as e:
             print(
                 f"\nThere was an error while sorting files by {self.sort_type}:"
-                f"\n{e.args}"
+                f"\n{e.args}\n"
                 "\nPlease check the log file for further information"
             )
 
             logger.exception(
                 f"Error while sorting by {self.sort_type}"
+                f"Sorter is valid: {self.assert_valid()}"
                 f"\nCheck the following attributes of sorter object {self}"
                 f"\nFolder valid: {self.is_valid_folder}"
                 f"\nSort type valid: {self.is_valid_sort}"
@@ -218,7 +219,6 @@ class Sorter:
 
             logger.debug(
                 f"Other sorter object {self} attributes:"
-                f"\nsort_type = {self.sort_type}"
                 f"\nearliest_year = {self.earliest_year}"
                 f"\ntoday = {self.today}"
             )
