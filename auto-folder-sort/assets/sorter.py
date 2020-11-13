@@ -4,7 +4,12 @@ import shutil
 import time
 from datetime import datetime
 
-import constants
+# If being run directly or by runnint sorter_test.py, assets.constants
+# will fail so use import constants instead
+try:
+    import assets.constants
+except ImportError:
+    import constants
 
 # Log
 logger = logging.getLogger(__name__)
