@@ -149,6 +149,8 @@ class Sorter:
                 else:
                     new_path = os.path.join(self.folder, "Other", item)
 
+            logger.info(f"Moving {old_path} to {new_path}")
+
             shutil.move(old_path, new_path)
 
     def sort_date(self):
@@ -172,7 +174,7 @@ class Sorter:
             mod_year = mod_local_time[-1]
 
             if int(mod_year) < self.earliest_year:
-                print(
+                logger.warning(
                     f"\n{item} was last modified {mod_local_time}"
                     "\nThis is earlier than the earliest given year of "
                     f"{self.earliest}, so the file was skipped while sorting."
@@ -185,6 +187,8 @@ class Sorter:
                 f"{constants.MONTHS[mod_month]} {mod_month}",
                 item,
             )
+
+            logger.info(f"Moving {old_path} to {new_path}")
 
             shutil.move(old_path, new_path)
 
