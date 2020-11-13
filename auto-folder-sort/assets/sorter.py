@@ -198,17 +198,30 @@ class Sorter:
                 self.s_dict[self.sort_type][0]()
                 self.s_dict[self.sort_type][1]()
             else:
-                raise IOError(
-                    "\nOne of the following values given was invalid (False):"
-                    f"\nFolder valid: {self.is_valid_folder}"
-                    f"\nSort type valid: {self.is_valid_sort}"
-                    f"\nEarliest year valid: {self.is_valid_earliest}"
-                )
+                raise IOError
         except IOError as e:
             print(
                 f"\nThere was an error while sorting files by {self.sort_type}:"
                 f"\n{e.args}"
                 "\nPlease check the log file for further information"
             )
+
+            logger.exception(
+                f"Error while sorting by {self.sort_type}"
+                f"\nCheck the following attributes of sorter object {self}"
+                f"\nFolder valid: {self.is_valid_folder}"
+                f"\nSort type valid: {self.is_valid_sort}"
+                f"\nEarliest year valid: {self.is_valid_earliest}"
+                "\nAlso make sure that the current folder is not being changed by"
+                f"\nanother program. Current folder: {self.folder}"
+            )
+
+            logger.debug(
+                f"Other sorter object {self} attributes:"
+                f"\nsort_type = {self.sort_type}"
+                f"\nearliest_year = {self.earliest_year}"
+                f"\ntoday = {self.today}"
+            )
+
             return False
         return True
