@@ -242,6 +242,13 @@ class TestSorter(unittest.TestCase):
 
         self.undo_file_sort()
         for file_type in self.temp_dirs:
+
+            logger.debug(
+                f"Checking file type: {file_type}"
+                f"\nSorted folder: {self.temp_dirs[file_type]}"
+                f"\nShould be: {TEST_FILE_FOLDERS[file_type]}"
+            )
+
             self.assertEqual(self.temp_dirs[file_type], TEST_FILE_FOLDERS[file_type])
 
     def test_sort_date(self):
@@ -249,6 +256,12 @@ class TestSorter(unittest.TestCase):
         self.sorter1.sort_date()
 
         self.undo_date_sort()
+
+        logger.debug(
+            f"Checking date sort\nSorted folder: {self.temp_dir}"
+            f"\nShould be: {SAMPLE_FILES}"
+        )
+
         self.assertEqual(self.temp_dir, SAMPLE_FILES)
 
     def test_sort(self):
@@ -258,7 +271,7 @@ class TestSorter(unittest.TestCase):
         self.undo_date_sort()
 
         logger.debug(
-            f"Checkling date sort\nSorted folder: {self.temp_dir}"
+            f"Checking date sort\nSorted folder: {self.temp_dir}"
             f"\nShould be: {SAMPLE_FILES}"
         )
 
