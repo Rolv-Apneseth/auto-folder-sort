@@ -67,8 +67,7 @@ class Main:
             with open(self.BACKUP_PATH, "rb") as obs_pickle:
                 self.observers = pickle.load(obs_pickle)
         else:
-            return False
-        return True
+            self.observers = {}
 
     def startup(self):
         pass
