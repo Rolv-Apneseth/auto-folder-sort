@@ -29,6 +29,12 @@ class Main:
         self.PICKLE_PATH = os.path.join(FILE_PATH, "assets", "observers.pkl")
         self.BACKUP_PATH = os.path.join(FILE_PATH, "assets", "backup_observers.pkl")
 
+        # Get commands
+        self.commands = []
+        with open("folders_to_track.txt", "r") as txt:
+            for line in txt.readlines():
+                self.commands.append(line)
+
     # HELPER FUNCTIONS
     def pickle_exists(self) -> bool:
         return os.path.exists(self.PICKLE_PATH)
@@ -50,7 +56,6 @@ class Main:
 
     def backup(self):
         if self.pickle_exists():
-
             if self.backup_exists():
                 send2trash(self.BACKUP_PATH)
 
