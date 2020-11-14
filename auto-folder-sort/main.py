@@ -29,9 +29,8 @@ class Main:
         self.PICKLE_PATH = os.path.join(FILE_PATH, "assets", "observers.pkl")
         self.BACKUP_PATH = os.path.join(FILE_PATH, "assets", "backup_observers.pkl")
 
-        self.observers = []
-
     # HELPER FUNCTIONS
+
     def pickle_exists(self) -> bool:
         return os.path.exists(self.PICKLE_PATH)
 
@@ -50,7 +49,7 @@ class Main:
 
         return observer
 
-    def add_observer(self, folder, sort_type, earliest_year=datetime.today().year):
+    def update_observers(self, folder, sort_type, earliest_year=datetime.today().year):
         pass
 
     def backup(self):
@@ -61,7 +60,15 @@ class Main:
             os.rename(self.PICKLE_PATH, self.BACKUP_PATH)
 
     def load_observers(self):
-        pass
+        if self.pickle_exists():
+            with open(self.PICKLE_PATH, "rb") as obs_pickle:
+                self.observers = pickle.load(obs_pickle)
+        elif self.backup_exists():
+            with open(self.BACKUP_PATH, "rb") as obs_pickle:
+                self.observers = pickle.load(obs_pickle)
+        else:
+            return False
+        return True
 
     def startup(self):
         pass
