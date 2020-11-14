@@ -23,14 +23,13 @@ class CustomEventHandler(FileSystemEventHandler):
         self.sorter.sort()
 
 
-# MAIN
+# MAIN CLASS
 class Main:
     def __init__(self):
         self.PICKLE_PATH = os.path.join(FILE_PATH, "assets", "observers.pkl")
         self.BACKUP_PATH = os.path.join(FILE_PATH, "assets", "backup_observers.pkl")
 
     # HELPER FUNCTIONS
-
     def pickle_exists(self) -> bool:
         return os.path.exists(self.PICKLE_PATH)
 
@@ -49,9 +48,6 @@ class Main:
 
         return observer
 
-    def update_observers(self, folder, sort_type, earliest_year=datetime.today().year):
-        pass
-
     def backup(self):
         if self.backup_exists():
             send2trash(self.BACKUP_PATH)
@@ -69,8 +65,20 @@ class Main:
         else:
             self.observers = {}
 
-    def startup(self):
-        pass
+    def save_observers(self):
+        if self.observers:
+            with open(self.PICKLE_PATH, "wb") as obs_pickle:
+                pickle.dump(self.observers, obs_pickle)
 
+    def update_observers(self, folder, sort_type, earliest_year=datetime.today().year):
+        """Adds an observer object for a specific folder to self.observers"""
+
+        new_observer = self.make_observer(folder, sort_type, earliest_year)
+
+        self.observers[folder] = new_observer
+
+        self.save_observers()
+
+    # MAIN
     def main(self):
-        pass
+        self.load_observers()
