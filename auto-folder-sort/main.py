@@ -49,10 +49,11 @@ class Main:
         return observer
 
     def backup(self):
-        if self.backup_exists():
-            send2trash(self.BACKUP_PATH)
-
         if self.pickle_exists():
+
+            if self.backup_exists():
+                send2trash(self.BACKUP_PATH)
+
             os.rename(self.PICKLE_PATH, self.BACKUP_PATH)
 
     def load_observers(self):
@@ -67,6 +68,8 @@ class Main:
 
     def save_observers(self):
         if self.observers:
+            self.backup()
+
             with open(self.PICKLE_PATH, "wb") as obs_pickle:
                 pickle.dump(self.observers, obs_pickle)
 
@@ -74,11 +77,10 @@ class Main:
         """Adds an observer object for a specific folder to self.observers"""
 
         new_observer = self.make_observer(folder, sort_type, earliest_year)
-
         self.observers[folder] = new_observer
 
         self.save_observers()
 
     # MAIN
-    def main(self):
+    def start(self):
         self.load_observers()
