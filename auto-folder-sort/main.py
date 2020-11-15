@@ -29,7 +29,7 @@ class Main:
         self.PICKLE_PATH = os.path.join(FILE_PATH, "assets", "observers.pkl")
         self.BACKUP_PATH = os.path.join(FILE_PATH, "assets", "backup_observers.pkl")
 
-        # Get commands
+        # Get commands from text file
         self.commands = []
         self.folders = []
         with open("folders_to_track.txt", "r") as txt:
@@ -40,9 +40,11 @@ class Main:
 
     # HELPER FUNCTIONS
     def pickle_exists(self) -> bool:
+        """Returns boolean value for whether the pickle file exists."""
         return os.path.exists(self.PICKLE_PATH)
 
     def backup_exists(self) -> bool:
+        """Returns boolean value for whether the backup pickle file exists."""
         return os.path.exists(self.BACKUP_PATH)
 
     def make_observer(self, folder, sort_type, earliest_year):
@@ -58,6 +60,8 @@ class Main:
         return observer
 
     def backup(self):
+        """Changes the current pickle file into the backup pickle file."""
+
         if self.pickle_exists():
             if self.backup_exists():
                 send2trash(self.BACKUP_PATH)
@@ -65,6 +69,9 @@ class Main:
             os.rename(self.PICKLE_PATH, self.BACKUP_PATH)
 
     def load_observers(self):
+        """Gets self.observers by either loading a pickle file or making it a
+        blank dictionary."""
+
         if self.pickle_exists():
             with open(self.PICKLE_PATH, "rb") as obs_pickle:
                 self.observers = pickle.load(obs_pickle)
@@ -75,6 +82,8 @@ class Main:
             self.observers = {}
 
     def save_observers(self):
+        """Pickles self.observers."""
+
         if self.observers:
             self.backup()
 
@@ -82,7 +91,7 @@ class Main:
                 pickle.dump(self.observers, obs_pickle)
 
     def add_observer(self, folder, sort_type, earliest_year=datetime.today().year):
-        """Adds an observer object for a specific folder to self.observers"""
+        """Adds an observer object for a specific folder to self.observers."""
 
         new_observer = self.make_observer(folder, sort_type, earliest_year)
         self.observers[folder] = new_observer
@@ -117,6 +126,8 @@ class Main:
 
     # MAIN
     def start_up(self):
+        """Run first after object is instantiated."""
+
         self.load_observers()
         self.backup()
 
