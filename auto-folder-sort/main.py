@@ -30,9 +30,12 @@ class Main:
 
         # Get commands
         self.commands = []
+        self.folders = []
         with open("folders_to_track.txt", "r") as txt:
             for line in txt.readlines():
+                line = line.split()
                 self.commands.append(line)
+                self.folders.append(line[0])
 
     # HELPER FUNCTIONS
     def pickle_exists(self) -> bool:
@@ -97,6 +100,22 @@ class Main:
 
         self.save_observers()
 
+    def get_delete_list(self) -> list:
+        """Returns a list of folder paths which do not appear in self.folders,
+        and are therefore to be removed from self.observers.
+
+        To be used in conjunction with self.remove_observers.
+        """
+
+        delete_list: list = []
+        for folder in self.observers:
+            if folder not in self.folders:
+                delete_list.append(folder)
+
+        return delete_list
+
     # MAIN
-    def start(self):
+    def start_up(self):
         self.load_observers()
+
+        self.remove_observers(self.get_delete_list())
