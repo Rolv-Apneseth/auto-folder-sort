@@ -29,6 +29,8 @@ class Main:
         self.PICKLE_PATH = os.path.join(FILE_PATH, "assets", "observers.pkl")
         self.BACKUP_PATH = os.path.join(FILE_PATH, "assets", "backup_observers.pkl")
 
+        self.observers = {}
+
         # Get commands from text file
         self.commands = []
         self.folders = []
@@ -67,19 +69,6 @@ class Main:
                 send2trash(self.BACKUP_PATH)
 
             os.rename(self.PICKLE_PATH, self.BACKUP_PATH)
-
-    def load_observers(self):
-        """Gets self.observers by either loading a pickle file or making it a
-        blank dictionary."""
-
-        if self.pickle_exists():
-            with open(self.PICKLE_PATH, "rb") as obs_pickle:
-                self.observers = pickle.load(obs_pickle)
-        elif self.backup_exists():
-            with open(self.BACKUP_PATH, "rb") as obs_pickle:
-                self.observers = pickle.load(obs_pickle)
-        else:
-            self.observers = {}
 
     def add_observer(self, folder, sort_type, earliest_year=datetime.today().year):
         """Adds an observer object for a specific folder to self.observers."""
