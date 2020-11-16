@@ -39,14 +39,6 @@ class Main:
                 self.commands.append(line)
 
     # HELPER FUNCTIONS
-    def pickle_exists(self) -> bool:
-        """Returns boolean value for whether the pickle file exists."""
-        return os.path.exists(self.PICKLE_PATH)
-
-    def backup_exists(self) -> bool:
-        """Returns boolean value for whether the backup pickle file exists."""
-        return os.path.exists(self.BACKUP_PATH)
-
     def make_observer(self, folder, sort_type, earliest_year):
         """Generates an observer object, as well as the sorter and event handler for it."""
 
@@ -58,15 +50,6 @@ class Main:
         observer.schedule(event_handler, folder, recursive=True)
 
         return observer
-
-    def backup(self):
-        """Changes the current pickle file into the backup pickle file."""
-
-        if self.pickle_exists():
-            if self.backup_exists():
-                send2trash(self.BACKUP_PATH)
-
-            os.rename(self.PICKLE_PATH, self.BACKUP_PATH)
 
     def add_observer(self, folder, sort_type, earliest_year=datetime.today().year):
         """Adds an observer object for a specific folder to self.observers."""
