@@ -1,16 +1,14 @@
 import logging
 import os
-import pickle
-import sys
 import time
 from datetime import datetime
 
-from send2trash import send2trash
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 from assets.sorter import Sorter
 
+# CONSTANTS
 FILE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -26,27 +24,16 @@ class CustomEventHandler(FileSystemEventHandler):
 # MAIN CLASS
 class Main:
     def __init__(self):
-        self.PICKLE_PATH = os.path.join(FILE_PATH, "assets", "observers.pkl")
-        self.BACKUP_PATH = os.path.join(FILE_PATH, "assets", "backup_observers.pkl")
+        self.observers = {}
 
         # Get commands from text file
         self.commands = []
-        self.folders = []
         with open("folders_to_track.txt", "r") as txt:
             for line in txt.readlines():
                 line = line.split()
                 self.commands.append(line)
-                self.folders.append(line[0])
 
-    # HELPER FUNCTIONS
-    def pickle_exists(self) -> bool:
-        """Returns boolean value for whether the pickle file exists."""
-        return os.path.exists(self.PICKLE_PATH)
-
-    def backup_exists(self) -> bool:
-        """Returns boolean value for whether the backup pickle file exists."""
-        return os.path.exists(self.BACKUP_PATH)
-
+    # HELPER METHODS
     def make_observer(self, folder, sort_type, earliest_year):
         """Generates an observer object, as well as the sorter and event handler for it."""
 
@@ -59,91 +46,27 @@ class Main:
 
         return observer
 
-    def backup(self):
-        """Changes the current pickle file into the backup pickle file."""
-
-        if self.pickle_exists():
-            if self.backup_exists():
-                send2trash(self.BACKUP_PATH)
-
-            os.rename(self.PICKLE_PATH, self.BACKUP_PATH)
-
-    def load_observers(self):
-        """Gets self.observers by either loading a pickle file or making it a
-        blank dictionary."""
-
-        if self.pickle_exists():
-            with open(self.PICKLE_PATH, "rb") as obs_pickle:
-                self.observers = pickle.load(obs_pickle)
-        elif self.backup_exists():
-            with open(self.BACKUP_PATH, "rb") as obs_pickle:
-                self.observers = pickle.load(obs_pickle)
-        else:
-            self.observers = {}
-
-    def save_observers(self):
-        """Pickles self.observers."""
-
-        if self.observers:
-            self.backup()
-
-            with open(self.PICKLE_PATH, "wb") as obs_pickle:
-                pickle.dump(self.observers, obs_pickle)
-
     def add_observer(self, folder, sort_type, earliest_year=datetime.today().year):
         """Adds an observer object for a specific folder to self.observers."""
 
         new_observer = self.make_observer(folder, sort_type, earliest_year)
         self.observers[folder] = new_observer
 
-        self.save_observers()
+    def get_observers(self):
+        """Creates self.observers by instantiating observer objects
+        based on self.commands."""
 
-    def remove_observers(self, folders):
-        """Removes any observers that are related to a path which is in the
-        given list 'folders'."""
-
-        for folder in folders:
-            try:
-                del self.observers[folder]
-            except KeyError as e:
-                print(f"Folder {folder} not found in self.observers.", e.args)
-
-        self.save_observers()
-
-    def get_delete_list(self) -> list:
-        """Returns a list of folder paths which do not appear in self.folders,
-        and are therefore to be removed from self.observers.
-
-        To be used in conjunction with self.remove_observers.
-        """
-
-        delete_list: list = []
-        for folder in self.observers:
-            if folder not in self.folders:
-                delete_list.append(folder)
-
-        return delete_list
+        for command in self.commands:
+            if len(command) == 2:
+                self.add_observer(command[0], command[1])
+            elif len(command) == 3:
+                self.add_observer(command[0], command[1], command[2])
 
     # MAIN
-    def start_up(self):
-        """Run first after object is instantiated."""
-
-        self.load_observers()
-        self.backup()
-
-        # Remove then add observers to match commands list
-        # (i.e. match external text file)
-        self.remove_observers(self.get_delete_list())
-        for command in self.commands:
-            if command[0] not in self.observers:
-                if len(command) == 2:
-                    self.add_observer(command[0], command[1])
-                elif len(command) == 3:
-                    self.add_observer(command[0], command[1], command[2])
-
     def run(self):
         """Main method, keeps observers in self.observers running."""
-        self.start_up()
+
+        self.get_observers()
 
         for observer in self.observers.values():
             observer.start()

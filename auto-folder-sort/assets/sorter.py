@@ -7,7 +7,7 @@ from datetime import datetime
 # If being run directly or by runnint sorter_test.py, assets.constants
 # will fail so use import constants instead
 try:
-    import assets.constants
+    import assets.constants as constants
 except ImportError:
     import constants
 
@@ -142,7 +142,8 @@ class Sorter:
             old_path = os.path.join(self.folder, item)
 
             if os.path.isdir(old_path):
-                new_path = os.path.join(self.folder, "Folders & Archives", item)
+                new_path = os.path.join(
+                    self.folder, "Folders & Archives", item)
 
             else:
                 extension = os.path.splitext(item)[-1][1:]
