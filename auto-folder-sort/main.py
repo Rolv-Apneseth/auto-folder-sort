@@ -26,9 +26,6 @@ class CustomEventHandler(FileSystemEventHandler):
 # MAIN CLASS
 class Main:
     def __init__(self):
-        self.PICKLE_PATH = os.path.join(FILE_PATH, "assets", "observers.pkl")
-        self.BACKUP_PATH = os.path.join(FILE_PATH, "assets", "backup_observers.pkl")
-
         self.observers = {}
 
         # Get commands from text file
