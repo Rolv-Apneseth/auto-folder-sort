@@ -125,25 +125,8 @@ class Main:
         return delete_list
 
     # MAIN
-    def start_up(self):
-        """Run first after object is instantiated."""
-
-        self.load_observers()
-        self.backup()
-
-        # Remove then add observers to match commands list
-        # (i.e. match external text file)
-        self.remove_observers(self.get_delete_list())
-        for command in self.commands:
-            if command[0] not in self.observers:
-                if len(command) == 2:
-                    self.add_observer(command[0], command[1])
-                elif len(command) == 3:
-                    self.add_observer(command[0], command[1], command[2])
-
     def run(self):
         """Main method, keeps observers in self.observers running."""
-        self.start_up()
 
         for observer in self.observers.values():
             observer.start()
