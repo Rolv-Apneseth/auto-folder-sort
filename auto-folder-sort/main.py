@@ -27,7 +27,8 @@ class CustomEventHandler(FileSystemEventHandler):
 class Main:
     def __init__(self):
         self.PICKLE_PATH = os.path.join(FILE_PATH, "assets", "observers.pkl")
-        self.BACKUP_PATH = os.path.join(FILE_PATH, "assets", "backup_observers.pkl")
+        self.BACKUP_PATH = os.path.join(
+            FILE_PATH, "assets", "backup_observers.pkl")
 
         # Get commands from text file
         self.commands = []
@@ -109,20 +110,6 @@ class Main:
                 print(f"Folder {folder} not found in self.observers.", e.args)
 
         self.save_observers()
-
-    def get_delete_list(self) -> list:
-        """Returns a list of folder paths which do not appear in self.folders,
-        and are therefore to be removed from self.observers.
-
-        To be used in conjunction with self.remove_observers.
-        """
-
-        delete_list: list = []
-        for folder in self.observers:
-            if folder not in self.folders:
-                delete_list.append(folder)
-
-        return delete_list
 
     # MAIN
     def run(self):
