@@ -82,32 +82,11 @@ class Main:
         else:
             self.observers = {}
 
-    def save_observers(self):
-        """Pickles self.observers."""
-
-        if self.observers:
-            self.backup()
-
-            with open(self.PICKLE_PATH, "wb") as obs_pickle:
-                pickle.dump(self.observers, obs_pickle)
-
     def add_observer(self, folder, sort_type, earliest_year=datetime.today().year):
         """Adds an observer object for a specific folder to self.observers."""
 
         new_observer = self.make_observer(folder, sort_type, earliest_year)
         self.observers[folder] = new_observer
-
-        self.save_observers()
-
-    def remove_observers(self, folders):
-        """Removes any observers that are related to a path which is in the
-        given list 'folders'."""
-
-        for folder in folders:
-            try:
-                del self.observers[folder]
-            except KeyError as e:
-                print(f"Folder {folder} not found in self.observers.", e.args)
 
         self.save_observers()
 
