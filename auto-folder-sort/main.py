@@ -140,3 +140,23 @@ class Main:
                     self.add_observer(command[0], command[1])
                 elif len(command) == 3:
                     self.add_observer(command[0], command[1], command[2])
+
+    def run(self):
+        """Main method, keeps observers in self.observers running."""
+        self.start_up()
+
+        for observer in self.observers.values():
+            observer.start()
+
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            for observer in self.observers.values():
+                observer.stop()
+                observer.join()
+
+
+if __name__ == "__main__":
+    program = Main()
+    program.run()
