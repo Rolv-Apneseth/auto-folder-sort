@@ -31,6 +31,8 @@ class CustomEventHandler(FileSystemEventHandler):
         self.sorter = sorter
 
     def on_modified(self, event):
+        logger.info(f"Folder {event.src_path} modified")
+
         self.sorter.sort()
 
 
