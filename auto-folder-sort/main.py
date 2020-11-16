@@ -33,12 +33,10 @@ class Main:
 
         # Get commands from text file
         self.commands = []
-        self.folders = []
         with open("folders_to_track.txt", "r") as txt:
             for line in txt.readlines():
                 line = line.split()
                 self.commands.append(line)
-                self.folders.append(line[0])
 
     # HELPER FUNCTIONS
     def pickle_exists(self) -> bool:
