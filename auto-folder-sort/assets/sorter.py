@@ -142,8 +142,7 @@ class Sorter:
             old_path = os.path.join(self.folder, item)
 
             if os.path.isdir(old_path):
-                new_path = os.path.join(
-                    self.folder, "Folders & Archives", item)
+                new_path = os.path.join(self.folder, "Folders & Archives", item)
 
             else:
                 extension = os.path.splitext(item)[-1][1:]
