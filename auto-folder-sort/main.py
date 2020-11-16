@@ -38,6 +38,9 @@ class Main:
         """Generates an observer object, as well as the sorter and event handler for it."""
 
         sorter = Sorter(folder, sort_type, earliest_year)
+        # Run sorter for the first time, in case folder has not
+        # been sorted before
+        sorter.sort()
 
         event_handler = CustomEventHandler(sorter)
 
@@ -52,7 +55,7 @@ class Main:
         new_observer = self.make_observer(folder, sort_type, earliest_year)
         self.observers[folder] = new_observer
 
-    def get_observers(self):
+    def setup_observers(self):
         """Creates self.observers by instantiating observer objects
         based on self.commands."""
 
@@ -66,7 +69,7 @@ class Main:
     def run(self):
         """Main method, keeps observers in self.observers running."""
 
-        self.get_observers()
+        self.setup_observers()
 
         for observer in self.observers.values():
             observer.start()
