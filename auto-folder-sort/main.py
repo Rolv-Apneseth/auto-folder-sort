@@ -1,16 +1,15 @@
 import logging
 import os
-import pickle
 import sys
 import time
 from datetime import datetime
 
-from send2trash import send2trash
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 from assets.sorter import Sorter
 
+# CONSTANTS
 FILE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -35,7 +34,7 @@ class Main:
                 line = line.split()
                 self.commands.append(line)
 
-    # HELPER FUNCTIONS
+    # HELPER METHODS
     def make_observer(self, folder, sort_type, earliest_year):
         """Generates an observer object, as well as the sorter and event handler for it."""
 
