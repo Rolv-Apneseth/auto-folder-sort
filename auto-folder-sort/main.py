@@ -42,11 +42,8 @@ class Main:
         self.observers = {}
 
         # Get commands from text file
-        self.commands = []
         with open("folders_to_track.txt", "r") as txt:
-            for line in txt.readlines():
-                line = line.split()
-                self.commands.append(line)
+            self.commands = [line.split() for line in txt.readlines()]
 
     # HELPER METHODS
     def make_observer(self, folder, sort_type, earliest_year):
