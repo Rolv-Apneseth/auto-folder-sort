@@ -27,8 +27,7 @@ class CustomEventHandler(FileSystemEventHandler):
 class Main:
     def __init__(self):
         self.PICKLE_PATH = os.path.join(FILE_PATH, "assets", "observers.pkl")
-        self.BACKUP_PATH = os.path.join(
-            FILE_PATH, "assets", "backup_observers.pkl")
+        self.BACKUP_PATH = os.path.join(FILE_PATH, "assets", "backup_observers.pkl")
 
         # Get commands from text file
         self.commands = []
@@ -88,11 +87,21 @@ class Main:
         new_observer = self.make_observer(folder, sort_type, earliest_year)
         self.observers[folder] = new_observer
 
-        self.save_observers()
+    def get_observers(self):
+        """Creates self.observers by instantiating observer objects
+        based on self.commands."""
+
+        for command in self.commands:
+            if len(command) == 2:
+                self.add_observer(command[0], command[1])
+            elif len(command) == 3:
+                self.add_observer(command[0], command[1], command[2])
 
     # MAIN
     def run(self):
         """Main method, keeps observers in self.observers running."""
+
+        self.get_observers()
 
         for observer in self.observers.values():
             observer.start()
