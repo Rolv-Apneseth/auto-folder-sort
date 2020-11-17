@@ -5,10 +5,13 @@ import time
 import unittest
 from datetime import datetime
 
-import constants
-from sorter import Sorter, file_handler
+# Note that to run this test, you must execute:
+# `python3 -m tests.sorter_test`
+# from the main directory (where main.py is)
+from assets import constants
+from assets.sorter import Sorter, file_handler
 
-# Log
+# LOG
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
