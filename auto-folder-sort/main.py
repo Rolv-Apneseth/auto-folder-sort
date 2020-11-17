@@ -29,14 +29,15 @@ logger.addHandler(file_handler)
 class CustomEventHandler(FileSystemEventHandler):
     def __init__(self, sorter):
         self.sorter = sorter
+
         # Run sorter for the first time, in case folder has not
         # been sorted before. Returns True if sort was successful
         self.was_sorted = self.sorter.sort()
 
         if not self.was_sorted:
             logger.warning(
-                f"Sorter for {self.sorter.folder} was not able to sort successfully."
-                f"Sorter valid: {self.sorter.assert_valid()}"
+                f"\nSorter for {self.sorter.folder} was not able to sort successfully."
+                f"\nSorter valid: {self.sorter.assert_valid()}"
             )
 
     def on_modified(self, event):
@@ -46,8 +47,8 @@ class CustomEventHandler(FileSystemEventHandler):
 
         if not self.was_sorted:
             logger.warning(
-                f"Sorter for {self.sorter.folder} was not able to sort successfully."
-                f"Sorter valid: {self.sorter.assert_valid()}"
+                f"\nSorter for {self.sorter.folder} was not able to sort successfully."
+                f"\nSorter valid: {self.sorter.assert_valid()}"
             )
 
 
@@ -59,6 +60,8 @@ class Main:
         # Get commands from text file
         with open("folders_to_track.txt", "r") as txt:
             self.commands = [line.split() for line in txt.readlines()]
+
+        logger.debug(f"Comands read from text file: {self.commands}")
 
     # HELPER METHODS
     def make_observer(self, folder, sort_type, earliest_year):
@@ -78,6 +81,11 @@ class Main:
 
         new_observer = self.make_observer(folder, sort_type, earliest_year)
         self.observers[folder] = new_observer
+
+        logger.info(
+            f"\nObserver created for {folder} and added to self.observers."
+            f"\nCurrent state of self.observers: {self.observers}"
+        )
 
     def setup_observers(self):
         """Creates self.observers by instantiating observer objects
@@ -102,9 +110,13 @@ class Main:
             while True:
                 time.sleep(1)
         except KeyboardInterrupt:
+            logger.debug("Keyboard interrupt detected. Stopping observers.")
+
             for observer in self.observers.values():
                 observer.stop()
                 observer.join()
+
+            logger.debug("Observers stopped successfully.")
 
 
 if __name__ == "__main__":
