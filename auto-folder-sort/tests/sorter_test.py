@@ -1,7 +1,6 @@
 import logging
 import os
 import shutil
-import time
 import unittest
 from datetime import datetime
 
@@ -10,6 +9,7 @@ from datetime import datetime
 # from the main directory (where main.py is)
 from assets import constants
 from assets.sorter import Sorter, file_handler
+from tests.constants_for_tests import TEST_FILE_FOLDERS, SAMPLE_FILES
 
 # LOG
 logger = logging.getLogger(__name__)
@@ -17,47 +17,12 @@ logger.setLevel(logging.INFO)
 
 logger.addHandler(file_handler)
 
-### CONSTANTS ###
-# Used to test that sort_file function placed every sample
-# file in exactly the right folder
-TEST_FILE_FOLDERS = {
-    "Folders & Archives": [
-        "sample_folder",
-        "sample.zip",
-    ],
-    "Executables": [
-        "sample.run",
-        "sample.exe",
-        "sample.bat",
-    ],
-    "Documents & Data": [
-        "sample.txt",
-        "sample.ini",
-    ],
-    "Media": [
-        "sample.mp4",
-        "sample.jpeg",
-    ],
-    "Other": [],
-}
-
-# Used to check folder structure is unchanged before each test
-SAMPLE_FILES = [
-    "sample.run",
-    "sample.mp4",
-    "sample.exe",
-    "sample_folder",
-    "sample.txt",
-    "sample.jpeg",
-    "sample.zip",
-    "sample.ini",
-    "sample.bat",
-]
-
+# SAMPLE FILES PATH
 SAMPLE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Sample Files")
 
-
 ## Unit Tests ##
+
+
 class TestSorter(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
