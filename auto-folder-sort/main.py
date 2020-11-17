@@ -9,10 +9,9 @@ from watchdog.observers import Observer
 from assets.sorter import Sorter
 
 # CONSTANTS
-FILE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-LOG_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "assets", "logs", "main.log"
-)
+DIR_PATH = os.path.dirname(os.path.abspath(__file__))
+LOG_PATH = os.path.join(DIR_PATH, "assets", "logs", "main.log")
+COMMANDS_PATH = os.path.join(DIR_PATH, "folders_to_track.txt")
 
 # LOG
 logger = logging.getLogger(__name__)
@@ -58,7 +57,7 @@ class Main:
         self.observers = {}
 
         # Get commands from text file
-        with open("folders_to_track.txt", "r") as txt:
+        with open(COMMANDS_PATH, "r") as txt:
             self.commands = [line.split() for line in txt.readlines()]
 
         logger.debug(f"Comands read from text file: {self.commands}")
