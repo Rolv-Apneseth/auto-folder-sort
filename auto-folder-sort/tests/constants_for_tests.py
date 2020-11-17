@@ -1,4 +1,9 @@
+import os
+
+
 ### CONSTANTS ###
+TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Used to test that sort_file function placed every sample
 # file in exactly the right folder
 TEST_FILE_FOLDERS = {

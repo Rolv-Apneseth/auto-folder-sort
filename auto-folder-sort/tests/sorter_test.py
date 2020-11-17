@@ -9,7 +9,7 @@ from datetime import datetime
 # from the main directory (where main.py is)
 from assets import constants
 from assets.sorter import Sorter, file_handler
-from tests.constants_for_tests import TEST_FILE_FOLDERS, SAMPLE_FILES
+from tests.constants_for_tests import TEST_FILE_FOLDERS, SAMPLE_FILES, TESTS_DIR
 
 # LOG
 logger = logging.getLogger(__name__)
@@ -18,11 +18,10 @@ logger.setLevel(logging.INFO)
 logger.addHandler(file_handler)
 
 # SAMPLE FILES PATH
-SAMPLE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Sample Files")
+SAMPLE_PATH = os.path.join(TESTS_DIR, "Sample Files")
+
 
 ## Unit Tests ##
-
-
 class TestSorter(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
