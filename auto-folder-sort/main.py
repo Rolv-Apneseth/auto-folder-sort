@@ -29,11 +29,26 @@ logger.addHandler(file_handler)
 class CustomEventHandler(FileSystemEventHandler):
     def __init__(self, sorter):
         self.sorter = sorter
+        # Run sorter for the first time, in case folder has not
+        # been sorted before. Returns True if sort was successful
+        self.was_sorted = self.sorter.sort()
+
+        if not self.was_sorted:
+            logger.warning(
+                f"Sorter for {self.sorter.folder} was not able to sort successfully."
+                f"Sorter valid: {self.sorter.assert_valid()}"
+            )
 
     def on_modified(self, event):
         logger.info(f"Folder {event.src_path} modified")
 
-        self.sorter.sort()
+        self.was_sorted = self.sorter.sort()
+
+        if not self.was_sorted:
+            logger.warning(
+                f"Sorter for {self.sorter.folder} was not able to sort successfully."
+                f"Sorter valid: {self.sorter.assert_valid()}"
+            )
 
 
 # MAIN CLASS
@@ -50,9 +65,6 @@ class Main:
         """Generates an observer object, as well as the sorter and event handler for it."""
 
         sorter = Sorter(folder, sort_type, earliest_year)
-        # Run sorter for the first time, in case folder has not
-        # been sorted before
-        sorter.sort()
 
         event_handler = CustomEventHandler(sorter)
 
