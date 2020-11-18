@@ -60,7 +60,7 @@ class Main:
         with open(COMMANDS_PATH, "r") as txt:
             self.commands = [line.split() for line in txt.readlines()]
 
-        logger.debug(f"Comands read from text file: {self.commands}")
+        logger.debug(f"Commands read from text file: {self.commands}")
 
     # HELPER METHODS
     def make_observer(self, folder, sort_type, earliest_year):
