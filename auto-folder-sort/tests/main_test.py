@@ -49,6 +49,7 @@ class TestMain(unittest.TestCase):
         self.temp_month_path = None
         self.temp_year_path = None
         self.event_handler = None
+        self.test_commands = None
 
         # Stops test from running if either folder layout is incorrect
         assert os.listdir(SAMPLE_PATH_1) == SAMPLE_FILES
@@ -98,7 +99,11 @@ class TestMain(unittest.TestCase):
         self.assertEqual(self.temp_dir, SAMPLE_FILES)
 
     def test_init(self):
-        pass
+
+        with open(TEST_COMMANDS, "r") as text:
+            self.test_commands = [line.split() for line in text.readlines()]
+
+        self.assertEqual(self.sample_program.commands, self.test_commands)
 
     def test_make_observer(self):
         pass
