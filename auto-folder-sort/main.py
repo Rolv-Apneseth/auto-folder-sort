@@ -94,7 +94,7 @@ class Main:
             if len(command) == 2:
                 self.add_observer(command[0], command[1])
             elif len(command) == 3:
-                self.add_observer(command[0], command[1], command[2])
+                self.add_observer(command[0], command[1], int(command[2]))
 
     # MAIN
     def run(self):
