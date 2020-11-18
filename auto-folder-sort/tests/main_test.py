@@ -48,6 +48,7 @@ class TestMain(unittest.TestCase):
         self.temp_path = None
         self.temp_month_path = None
         self.temp_year_path = None
+        self.event_handler = None
 
         # Stops test from running if either folder layout is incorrect
         assert os.listdir(SAMPLE_PATH_1) == SAMPLE_FILES
@@ -87,8 +88,14 @@ class TestMain(unittest.TestCase):
 
     # TESTS
 
-    def test_event_handler(self):
-        pass
+    def test_event_handler_init(self):
+        # Note that the event_handler's on_modified method is tested while
+        # observers are being tested so only it's constructor method can be
+        # tested separately
+        self.event_handler = main.CustomEventHandler(self.sample_sorter)
+
+        self.undo_date_sort()
+        self.assertEqual(self.temp_dir, SAMPLE_FILES)
 
     def test_init(self):
         pass
