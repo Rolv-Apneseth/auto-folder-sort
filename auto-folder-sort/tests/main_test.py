@@ -25,6 +25,7 @@ class TestMain(unittest.TestCase):
         with open(TEST_COMMANDS, "w") as new_commands:
             new_commands.write(f"{SAMPLE_PATH_1} file_type\n{SAMPLE_PATH_2} date 2018")
 
+        # Changes where the sample_program object will read commands from
         main.COMMANDS_PATH = TEST_COMMANDS
 
     @classmethod
@@ -45,6 +46,24 @@ class TestMain(unittest.TestCase):
 
     def tearDown(self):
         del self.sample_program
+
+    def test_event_handler(self):
+        pass
+
+    def test_init(self):
+        pass
+
+    def test_make_observer(self):
+        pass
+
+    def test_add_observer(self):
+        pass
+
+    def test_setup_observers(self):
+        pass
+
+    def test_run(self):
+        pass
 
 
 if __name__ == "__main__":
