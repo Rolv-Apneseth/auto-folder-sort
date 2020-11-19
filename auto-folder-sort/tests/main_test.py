@@ -3,6 +3,7 @@ import os
 import shutil
 import unittest
 from datetime import datetime
+
 from watchdog.observers.inotify import InotifyObserver
 
 # Note that to run this test, you must execute:
@@ -11,7 +12,8 @@ from watchdog.observers.inotify import InotifyObserver
 import main
 from assets.constants import FILE_FOLDERS, MONTHS
 from assets.sorter import Sorter
-from tests.constants_for_tests import SAMPLE_FILES, TEST_FILE_FOLDERS, TESTS_DIR
+from tests.constants_for_tests import (SAMPLE_FILES, TEST_FILE_FOLDERS,
+                                       TESTS_DIR)
 
 # CONSTANTS
 SAMPLE_PATH_1 = os.path.join(TESTS_DIR, "Sample Files")
@@ -25,7 +27,8 @@ class TestMain(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         with open(TEST_COMMANDS, "w") as new_commands:
-            new_commands.write(f"{SAMPLE_PATH_1} file_type\n{SAMPLE_PATH_2} date 2018")
+            new_commands.write(
+                f"{SAMPLE_PATH_1} file_type\n{SAMPLE_PATH_2} date 2018")
 
         # Changes where the sample_program object will read commands from
         main.COMMANDS_PATH = TEST_COMMANDS
@@ -121,19 +124,44 @@ class TestMain(unittest.TestCase):
         self.assertIsInstance(self.test_observer, InotifyObserver)
 
         self.assertRaises(
-            IOError, lambda: self.sample_program.make_observer("./", "date", 2018)
+            IOError, lambda: self.sample_program.make_observer(
+                "./", "date", 2018)
         )
         self.assertRaises(
             IOError,
-            lambda: self.sample_program.make_observer(SAMPLE_PATH_1, "string", 2018),
+            lambda: self.sample_program.make_observer(
+                SAMPLE_PATH_1, "string", 2018),
         )
         self.assertRaises(
             IOError,
-            lambda: self.sample_program.make_observer(SAMPLE_PATH_1, "date", "2018"),
+            lambda: self.sample_program.make_observer(
+                SAMPLE_PATH_1, "date", "2018"),
         )
 
     def test_add_observer(self):
-        pass
+        # Parameters must be the same as for sample_sorter so
+        # undo_date_sort functions as normal
+        self.sample_program.add_observer(SAMPLE_PATH_1, 'date', 2018)
+        self.sample_sorter.update_years()
+        self.undo_date_sort()
+        self.assertEqual(self.temp_dir, SAMPLE_FILES)
+
+        self.sample_program.add_observer(SAMPLE_PATH_2, 'date', 2018)
+        # Change path for sample_sorter so undo_date_sort works
+        self.sample_sorter.folder = SAMPLE_PATH_2
+        self.undo_date_sort()
+        self.assertEqual(self.temp_dir, SAMPLE_FILES)
+
+        self.assertEqual(len(self.sample_program.observers), 2)
+        self.assertIsInstance(
+            self.sample_program.observers[SAMPLE_PATH_1], InotifyObserver)
+        self.assertIsInstance(
+            self.sample_program.observers[SAMPLE_PATH_2], InotifyObserver)
+
+        # Negative
+        for _ in range(100):
+            self.sample_program.add_observer(SAMPLE_PATH_1, 'date', 2018)
+        self.assertEqual(len(self.sample_program.observers), 2)
 
     def test_setup_observers(self):
         pass
