@@ -80,13 +80,19 @@ class Main:
     def add_observer(self, folder, sort_type, earliest_year=datetime.today().year):
         """Adds an observer object for a specific folder to self.observers."""
 
-        new_observer = self.make_observer(folder, sort_type, earliest_year)
-        self.observers[folder] = new_observer
+        if folder not in self.observers:
+            new_observer = self.make_observer(folder, sort_type, earliest_year)
+            self.observers[folder] = new_observer
 
-        logger.info(
-            f"\nObserver created for {folder} and added to self.observers."
-            f"\nCurrent state of self.observers: {self.observers}"
-        )
+            logger.info(
+                f"\nObserver created for {folder} and added to self.observers."
+                f"\nCurrent state of self.observers: {self.observers}"
+            )
+        else:
+            logger.warning(
+                "\nObserver could not be created as there is already an observer"
+                f"\nmonitoring the folder: {folder}"
+            )
 
     def setup_observers(self):
         """Creates self.observers by instantiating observer objects
