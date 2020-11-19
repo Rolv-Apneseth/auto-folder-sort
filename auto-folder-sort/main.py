@@ -104,6 +104,14 @@ class Main:
             elif len(command) == 3:
                 self.add_observer(command[0], command[1], int(command[2]))
 
+    def stop_observers(self):
+        """Stops all observers in self.observers from running. Used before program
+        shuts down"""
+
+        for observer in self.observers.values():
+            observer.stop()
+            observer.join()
+
     # MAIN
     def run(self):
         """Main method, keeps observers in self.observers running."""
@@ -116,14 +124,16 @@ class Main:
         try:
             while True:
                 time.sleep(1)
+
         except KeyboardInterrupt:
-            logger.debug("Keyboard interrupt detected. Stopping observers.")
+            logger.debug("Keyboard interrupt detected. Observers have been stopped.")
 
-            for observer in self.observers.values():
-                observer.stop()
-                observer.join()
+            self.stop_observers()
 
-            logger.debug("Observers stopped successfully.")
+        except IOError:
+            self.stop_observers()
+
+            logger.exception("IOError detected. Observers have been stopped.")
 
 
 if __name__ == "__main__":
