@@ -3,6 +3,7 @@ import os
 import shutil
 import unittest
 from datetime import datetime
+from watchdog.observers.inotify import InotifyObserver
 
 # Note that to run this test, you must execute:
 # `python3 -m tests.main_test`
@@ -50,6 +51,7 @@ class TestMain(unittest.TestCase):
         self.temp_year_path = None
         self.event_handler = None
         self.test_commands = None
+        self.test_observer = None
 
         # Stops test from running if either folder layout is incorrect
         assert os.listdir(SAMPLE_PATH_1) == SAMPLE_FILES
@@ -87,6 +89,21 @@ class TestMain(unittest.TestCase):
                 os.rmdir(self.temp_month_path)
             os.rmdir(self.temp_year_path)
 
+    def fail_observer_folder(self):
+        """Runs main.make_observer with a folder which should raise an exception."""
+
+        self.sample_program.make_observer("./", "date", 2018)
+
+    def fail_observer_type(self):
+        """Runs main.make_observer with a sort type which should raise an exception."""
+
+        self.sample_program.make_observer(SAMPLE_PATH_1, "string", 2018)
+
+    def fail_observer_year(self):
+        """Runs main.make_observer with an earliest year which should raise an exception."""
+
+        self.sample_program.make_observer(SAMPLE_PATH_1, "date", "2018")
+
     # TESTS
 
     def test_event_handler_init(self):
@@ -106,7 +123,21 @@ class TestMain(unittest.TestCase):
         self.assertEqual(self.sample_program.commands, self.test_commands)
 
     def test_make_observer(self):
-        pass
+        # Parameters must be the same as for sample_sorter so
+        # undo_date_sort functions as normal
+        self.test_observer = self.sample_program.make_observer(
+            SAMPLE_PATH_1, "date", 2018
+        )
+        self.sample_sorter.update_years()
+
+        self.undo_date_sort()
+        self.assertEqual(self.temp_dir, SAMPLE_FILES)
+
+        self.assertIsInstance(self.test_observer, InotifyObserver)
+
+        self.assertRaises(IOError, self.fail_observer_folder)
+        self.assertRaises(IOError, self.fail_observer_type)
+        self.assertRaises(IOError, self.fail_observer_year)
 
     def test_add_observer(self):
         pass
