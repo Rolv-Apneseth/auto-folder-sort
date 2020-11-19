@@ -208,10 +208,9 @@ class Sorter:
                 self.s_dict[self.sort_type][1]()
             else:
                 raise IOError
-        except IOError as e:
+        except IOError:
             print(
                 f"\nThere was an error while sorting files by {self.sort_type}:"
-                f"\n{e.args}\n"
                 "\nPlease check the log file for further information"
             )
 
