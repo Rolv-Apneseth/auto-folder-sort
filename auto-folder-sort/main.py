@@ -39,6 +39,8 @@ class CustomEventHandler(FileSystemEventHandler):
                 f"\nSorter valid: {self.sorter.assert_valid()}"
             )
 
+            raise IOError
+
     def on_modified(self, event):
         logger.info(f"Folder {event.src_path} modified")
 
