@@ -192,7 +192,14 @@ class TestMain(unittest.TestCase):
 
         self.undo_date_sort()
         self.assertEqual(self.temp_dir, SAMPLE_FILES)
+
         self.undo_file_sort()
+        for file_type in self.temp_dirs:
+            self.assertEqual(self.temp_dirs[file_type], TEST_FILE_FOLDERS[file_type])
+
+        self.assertEqual(len(self.sample_program.observers), 2)
+        for observer in self.sample_program.observers.values():
+            self.assertIsInstance(observer, InotifyObserver)
 
     def test_run(self):
         pass
