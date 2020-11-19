@@ -15,8 +15,8 @@ from assets.sorter import Sorter
 from tests.constants_for_tests import SAMPLE_FILES, TEST_FILE_FOLDERS, TESTS_DIR
 
 # CONSTANTS
-SAMPLE_PATH_1 = os.path.join(TESTS_DIR, "Sample Files")
-SAMPLE_PATH_2 = os.path.join(TESTS_DIR, "Sample Files (2)")
+SAMPLE_PATH_1 = os.path.join(TESTS_DIR, "SampleFiles")
+SAMPLE_PATH_2 = os.path.join(TESTS_DIR, "SampleFiles(2)")
 
 TEST_COMMANDS = os.path.join(TESTS_DIR, "test_folders_to_track.txt")
 
@@ -26,7 +26,7 @@ class TestMain(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         with open(TEST_COMMANDS, "w") as new_commands:
-            new_commands.write(f"{SAMPLE_PATH_1} file_type\n{SAMPLE_PATH_2} date 2018")
+            new_commands.write(f"{SAMPLE_PATH_2} file_type\n{SAMPLE_PATH_1} date 2018")
 
         # Changes where the sample_program object will read commands from
         main.COMMANDS_PATH = TEST_COMMANDS
@@ -112,7 +112,7 @@ class TestMain(unittest.TestCase):
             for item in self.temp_dir:
                 shutil.move(
                     os.path.join(self.temp_path, item),
-                    os.path.join(self.sorter2.folder, item),
+                    os.path.join(self.sample_file_type_sorter.folder, item),
                 )
             os.rmdir(self.temp_path)
 
@@ -187,7 +187,12 @@ class TestMain(unittest.TestCase):
         self.assertEqual(len(self.sample_program.observers), 2)
 
     def test_setup_observers(self):
-        pass
+        self.sample_program.setup_observers()
+        self.sample_sorter.update_years()
+
+        self.undo_date_sort()
+        self.assertEqual(self.temp_dir, SAMPLE_FILES)
+        self.undo_file_sort()
 
     def test_run(self):
         pass

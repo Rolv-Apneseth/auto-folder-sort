@@ -18,7 +18,7 @@ logger.setLevel(logging.INFO)
 logger.addHandler(file_handler)
 
 # SAMPLE FILES PATH
-SAMPLE_PATH = os.path.join(TESTS_DIR, "Sample Files")
+SAMPLE_PATH = os.path.join(TESTS_DIR, "SampleFiles")
 
 
 ## Unit Tests ##
