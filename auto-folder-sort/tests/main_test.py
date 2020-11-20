@@ -1,6 +1,7 @@
 import logging
 import os
 import shutil
+import time
 import unittest
 from datetime import datetime
 
@@ -200,9 +201,6 @@ class TestMain(unittest.TestCase):
         self.assertEqual(len(self.sample_program.observers), 2)
         for observer in self.sample_program.observers.values():
             self.assertIsInstance(observer, InotifyObserver)
-
-    def test_run(self):
-        pass
 
 
 if __name__ == "__main__":
