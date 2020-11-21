@@ -13,7 +13,12 @@ from watchdog.observers.inotify import InotifyObserver
 import main
 from assets.constants import FILE_FOLDERS, MONTHS
 from assets.sorter import Sorter
-from tests.constants_for_tests import SAMPLE_FILES, TEST_FILE_FOLDERS, TESTS_DIR
+from tests.constants_for_tests import (
+    MONTH_NUMBERS,
+    SAMPLE_FILES,
+    TEST_FILE_FOLDERS,
+    TESTS_DIR,
+)
 
 # CONSTANTS
 SAMPLE_PATH_1 = os.path.join(TESTS_DIR, "SampleFiles")
@@ -56,6 +61,8 @@ class TestMain(unittest.TestCase):
         self.event_handler = None
         self.test_commands = None
         self.test_observer = None
+        self.new_file_1 = None
+        self.new_file_2 = None
 
         # Stops test from running if either folder layout is incorrect
         assert os.listdir(SAMPLE_PATH_1) == SAMPLE_FILES
@@ -201,6 +208,65 @@ class TestMain(unittest.TestCase):
         self.assertEqual(len(self.sample_program.observers), 2)
         for observer in self.sample_program.observers.values():
             self.assertIsInstance(observer, InotifyObserver)
+
+    def test_observer_objects(self):
+        # START OBSERVERS
+        self.sample_program.setup_observers()
+        self.sample_sorter.update_years()
+
+        for observer in self.sample_program.observers.values():
+            observer.start()
+
+        # NEW FILES
+        self.new_file_1 = os.path.join(SAMPLE_PATH_1, "new_file.txt")
+        self.new_file_2 = os.path.join(SAMPLE_PATH_2, "new_file.txt")
+
+        for new_file in (self.new_file_1, self.new_file_2):
+            with open(new_file, "w") as text:
+                text.write("")
+
+        # STOP OBSERVERS
+        time.sleep(0.5)  # so observers have time to detect modification
+        self.sample_program.stop_observers()
+
+        # UNDO AND VALIDATE DATE SORT
+        # First, check new_file.txt was in fact sorted correctly
+        self.temp_path = os.path.join(
+            SAMPLE_PATH_1,
+            str(datetime.today().year),
+            MONTH_NUMBERS[datetime.today().month],
+        )
+        self.temp_dir = os.listdir(self.temp_path)
+        self.assertTrue("new_file.txt" in self.temp_dir)
+
+        self.undo_date_sort()  # Undo folders
+
+        # new_file should be in the same folder as other sample files while
+        # this test is run within the same month and year as the sample files
+        # were created in
+        if datetime.today().year == 2020 and datetime.today().month == 11:
+            self.assertEqual(
+                sorted(self.temp_dir), sorted(SAMPLE_FILES + ["new_file.txt"])
+            )
+        else:
+            self.assertEqual(self.temp_dir, SAMPLE_FILES)
+
+        # UNDO AND VALIDATE FILE TYPE SORT
+        self.undo_file_sort()
+        for file_type in self.temp_dirs:
+            if file_type != "Documents & Data":
+                self.assertEqual(
+                    self.temp_dirs[file_type], TEST_FILE_FOLDERS[file_type]
+                )
+            else:
+                self.assertEqual(
+                    sorted(self.temp_dirs[file_type]),
+                    sorted(TEST_FILE_FOLDERS[file_type] + ["new_file.txt"]),
+                )
+
+        # DELETE NEW FILES
+        os.remove(self.new_file_1)
+        os.remove(self.new_file_2)
 
 
 if __name__ == "__main__":
