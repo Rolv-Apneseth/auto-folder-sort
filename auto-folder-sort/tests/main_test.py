@@ -187,6 +187,10 @@ class TestMain(unittest.TestCase):
 
         self.assertIsInstance(self.test_observer, InotifyObserver)
 
+        print(
+            "\nNote that the following custom error messages are expected."
+            "\nThey are raised on purpose within test_make_observer."
+        )
         self.assertRaises(
             IOError, lambda: self.sample_program.make_observer("./", "date", 2018)
         )
