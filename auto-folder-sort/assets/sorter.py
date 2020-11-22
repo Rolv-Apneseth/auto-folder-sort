@@ -12,17 +12,18 @@ except ImportError:
     import constants
 
 # Log
+LOG_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs", "sorter.log"
+)
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.WARNING)
 
 formatter = logging.Formatter(
     "\n%(levelname)s\nTime: %(asctime)s\nFile: %(filename)s:\n%(message)s"
 )
-log_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "logs", "sorter.log"
-)
 
-file_handler = logging.FileHandler(log_path)
+file_handler = logging.FileHandler(LOG_PATH)
 file_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
