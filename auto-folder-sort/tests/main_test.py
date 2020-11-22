@@ -11,7 +11,7 @@ from watchdog.observers.inotify import InotifyObserver
 # `python3 -m tests.main_test`
 # from the main directory (where main.py is)
 import main
-from assets.constants import FILE_FOLDERS, MONTHS
+from assets.constants import MONTHS
 from assets.sorter import Sorter
 from tests.constants_for_tests import (
     MONTH_NUMBERS,
