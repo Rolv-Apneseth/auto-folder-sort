@@ -26,6 +26,18 @@ SAMPLE_PATH_2 = os.path.join(TESTS_DIR, "SampleFiles(2)")
 
 TEST_COMMANDS = os.path.join(TESTS_DIR, "test_folders_to_track.txt")
 
+LOG_PATH = os.path.join(os.path.dirname(TESTS_DIR), "logs", "main_test.log")
+
+# LOG
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+formatter = logging.Formatter("\n%(levelname)s\nTime: %(asctime)s\n%(message)s")
+file_handler = logging.FileHandler(LOG_PATH)
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+
 
 ## Unit tests ##
 class TestMain(unittest.TestCase):
