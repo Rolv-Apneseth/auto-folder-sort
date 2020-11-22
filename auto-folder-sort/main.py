@@ -10,7 +10,7 @@ from assets.sorter import Sorter
 
 # CONSTANTS
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
-LOG_PATH = os.path.join(DIR_PATH, "assets", "logs", "main.log")
+LOG_PATH = os.path.join(DIR_PATH, "logs", "main.log")
 COMMANDS_PATH = os.path.join(DIR_PATH, "folders_to_track.txt")
 
 # LOG
