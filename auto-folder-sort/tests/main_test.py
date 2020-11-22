@@ -307,4 +307,6 @@ class TestMain(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    from tests.sorter_test import TestSorter
+
     unittest.main()
