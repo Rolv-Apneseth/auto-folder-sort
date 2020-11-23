@@ -64,6 +64,28 @@ class Main:
 
         logger.debug(f"Commands read from text file: {self.commands}")
 
+        # Validate commands
+        for command in self.commands:
+            # Note that wheteher commands are correct folder paths,
+            # valid year etc. are checked within the Sorter class
+            # and return an error there
+
+            if not 1 < len(command) < 4:
+                logger.error(
+                    f"\nA provided command in {COMMANDS_PATH} has less than 2 or more than 3 parameters."
+                    f"\nFull command/line in file: {command}"
+                )
+            elif command[1] not in ("date", "file_type"):
+                logger.error(
+                    f"\nA provided command in {COMMANDS_PATH} has given an"
+                    f"\ninvalid sort type. Sort type given: {command[1]}"
+                    f"\nFull command/line in file: {command}"
+                )
+            else:
+                continue
+
+            raise ValueError(f"Please fix commands given at {COMMANDS_PATH}")
+
     # HELPER METHODS
     def make_observer(self, folder, sort_type, earliest_year):
         """Generates an observer object, as well as the sorter and event handler for it."""
