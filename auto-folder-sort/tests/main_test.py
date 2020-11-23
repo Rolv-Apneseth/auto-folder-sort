@@ -24,6 +24,7 @@ SAMPLE_PATH_1 = os.path.join(TESTS_DIR, "SampleFiles")
 SAMPLE_PATH_2 = os.path.join(TESTS_DIR, "SampleFiles(2)")
 
 TEST_COMMANDS = os.path.join(TESTS_DIR, "test_folders_to_track.txt")
+TEST_FAIL_COMMANDS = os.path.join(TESTS_DIR, "test_fail_folders_to_track.txt")
 
 LOG_PATH = os.path.join(os.path.dirname(TESTS_DIR), "logs", "main_test.log")
 
@@ -83,6 +84,8 @@ class TestMain(unittest.TestCase):
         # Stops test from running if either folder layout is incorrect
         assert os.listdir(SAMPLE_PATH_1) == SAMPLE_FILES
         assert os.listdir(SAMPLE_PATH_2) == SAMPLE_FILES
+        # Ensures commands are being read from correct file
+        assert main.COMMANDS_PATH == TEST_COMMANDS
 
         logger.debug("Setup for new test successful")
 
@@ -151,6 +154,22 @@ class TestMain(unittest.TestCase):
                 f"\nAfter running undo_file_sort, self.temp_dirs = {self.temp_dirs}"
             )
 
+    def try_command(self, command: str) -> bool:
+        """Given a command (string), writes the command to a text file
+        and returns True if the given command did not raise errors.
+
+        Note: main.COMMANDS_PATH must be set to TEST_FAIL_COMMANDS and file generated at TEST_FAIL_COMMANDS must be deleted after use of this
+        method.
+        """
+        with open(TEST_FAIL_COMMANDS, "w") as fail_test:
+            fail_test.write(command)
+
+        try:
+            self.sample_program = main.Main()
+            return True
+        except ValueError:
+            return False
+
     # TESTS
 
     def test_event_handler_init(self):
@@ -168,6 +187,17 @@ class TestMain(unittest.TestCase):
             self.test_commands = [line.split() for line in text.readlines()]
 
         self.assertEqual(self.sample_program.commands, self.test_commands)
+
+        # Commands
+        main.COMMANDS_PATH = TEST_FAIL_COMMANDS
+
+        self.assertTrue(SAMPLE_PATH_2 + " date")
+        self.assertFalse(self.try_command(SAMPLE_PATH_2))
+        self.assertFalse(self.try_command(SAMPLE_PATH_2 + " date 2015 2018"))
+        self.assertFalse(self.try_command("date file_type string 2018"))
+
+        main.COMMANDS_PATH = TEST_COMMANDS
+        os.remove(TEST_FAIL_COMMANDS)
 
     def test_make_observer(self):
         # Parameters must be the same as for sample_sorter so
