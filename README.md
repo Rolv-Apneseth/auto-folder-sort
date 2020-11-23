@@ -9,6 +9,14 @@ Allows automated sorting of a given folder or folders into organised subfolders
 - Unit testing
 - Use of the watchdog library to monitor a system folder for modifications
 
+## Goals
+
+- Learn how to use logs and how to make unit tests for my programs, both to make me a better programmer and get better at debugging programs.
+
+- Automate a task using the watchdog library so a program could be left running indefinitely as a background process.
+
+- Most importantly, I wanted to prove to myself that I am in fact improving my ability to code by comparing this project to my previous, similar project https://github.com/Rolv-Apneseth/file-sorter
+
 ## Installation
 
 1. Requires python 3.6+ to run. Python can be installed from [here](https://www.python.org/downloads/)
