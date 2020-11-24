@@ -60,7 +60,10 @@ class Main:
 
         # Get commands from text file
         with open(COMMANDS_PATH, "r") as txt:
-            self.commands = [line.split() for line in txt.readlines()]
+            # Splits each line at '|' and strips each item of trailing whitespace
+            self.commands = [
+                list(map(str.strip, line.split("|"))) for line in txt.readlines()
+            ]
 
         logger.debug(f"Commands read from text file: {self.commands}")
 
