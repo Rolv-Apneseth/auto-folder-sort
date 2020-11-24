@@ -44,7 +44,9 @@ class TestMain(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         with open(TEST_COMMANDS, "w") as new_commands:
-            new_commands.write(f"{SAMPLE_PATH_2} file_type\n{SAMPLE_PATH_1} date 2018")
+            new_commands.write(
+                f"{SAMPLE_PATH_2} | file_type\n{SAMPLE_PATH_1} | date | 2018"
+            )
 
         # Changes where the sample_program object will read commands from
         main.COMMANDS_PATH = TEST_COMMANDS
@@ -184,17 +186,20 @@ class TestMain(unittest.TestCase):
     def test_init(self):
 
         with open(TEST_COMMANDS, "r") as text:
-            self.test_commands = [line.split() for line in text.readlines()]
+            self.test_commands = [
+                list(map(str.strip, line.split("|"))) for line in text.readlines()
+            ]
 
         self.assertEqual(self.sample_program.commands, self.test_commands)
 
         # Commands
         main.COMMANDS_PATH = TEST_FAIL_COMMANDS
 
-        self.assertTrue(SAMPLE_PATH_2 + " date")
+        self.assertTrue(SAMPLE_PATH_2 + " | date")
         self.assertFalse(self.try_command(SAMPLE_PATH_2))
-        self.assertFalse(self.try_command(SAMPLE_PATH_2 + " date 2015 2018"))
-        self.assertFalse(self.try_command("date file_type string 2018"))
+        self.assertFalse(self.try_command(SAMPLE_PATH_2 + " | date | 2015 | 2018"))
+        self.assertFalse(self.try_command("date | file_type | string | 2018"))
+        self.assertFalse(self.try_command("date | file_type | string | 2018"))
 
         main.COMMANDS_PATH = TEST_COMMANDS
         os.remove(TEST_FAIL_COMMANDS)
@@ -209,7 +214,7 @@ class TestMain(unittest.TestCase):
 
         logger.debug(
             f"\nsample_sorter years: {self.sample_sorter.years}"
-            " \nMake sure this is the same as would used in the test_observer"
+            " \nMake sure this is the same as would be used in the test_observer"
         )
 
         self.undo_date_sort()
