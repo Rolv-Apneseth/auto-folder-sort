@@ -200,6 +200,9 @@ class TestMain(unittest.TestCase):
         self.assertFalse(self.try_command(SAMPLE_PATH_2 + " | date | 2015 | 2018"))
         self.assertFalse(self.try_command("date | file_type | string | 2018"))
         self.assertFalse(self.try_command("date | file_type | string | 2018"))
+        self.assertFalse(self.try_command(SAMPLE_PATH_2 + " date 2018"))
+        self.assertFalse(self.try_command(SAMPLE_PATH_2 + " file_type"))
+        self.assertFalse(self.try_command(SAMPLE_PATH_2 + "||date||2018"))
 
         main.COMMANDS_PATH = TEST_COMMANDS
         os.remove(TEST_FAIL_COMMANDS)
