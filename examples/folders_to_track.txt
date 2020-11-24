@@ -1,2 +1,2 @@
-/home/user/Downloads/ file_type
-/home/user/Documents/ date 2015
+/home/user/Downloads/ | file_type
+/home/user/Documents/ | date | 2015
