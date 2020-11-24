@@ -31,7 +31,7 @@ Allows automated sorting of a given folder or folders into organised subfolders
 1. I strongly recommend running the built in tests before trying this on your personal files. To do this, navigate to auto-folder-sort and run `pyhton3 -m tests.main_test'.
    - All tests should pass with no issues. If ANY don't pass, please let me know and don't run the program on your folders as there is something wrong.
 2. To set which folders you want sorted, you must edit the folders_to_track.txt file located in the same folder as main.py.
-   - Each line will be read as 1 folder to track/sort and must have at least 2 space separated paramaeter provided
+   - Each line will be read as 1 folder to track/sort and must have at least 2 paramaters separated by the symbol "|"
    - Required parameters: Folder path and sort type (can only be 'date' or 'file_type')
    - Optional parameter: Earliest year (for date sort, folders will be generated for years ranging from this value to the current year)
 3. An example of an input file can be found in the examples folder.
